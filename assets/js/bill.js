@@ -25,13 +25,12 @@ export function buildBill(){
   const time = now.toLocaleTimeString(L().locale, {hour:"2-digit", minute:"2-digit"});
   const no = `SF-${billNo()}`;
 
-  const total = state.expenses.reduce((s,e) => s + e.amount, 0);
+  /* Everything below is in integer minor units, exactly as settle.js computes
+     it. Mixing units here is what made the ledger print a negative share. */
+  const { total, paid } = totals();
   const b = balances();
   const moves = computeMoves();
   const cur = esc(state.cur);
-  const paid = {};
-  state.people.forEach(p => paid[p] = 0);
-  state.expenses.forEach(e => paid[e.payer] += e.amount);
 
   const el = document.getElementById("bill");
   el.dir = L().dir;
@@ -41,7 +40,7 @@ export function buildBill(){
     <div class="b-top">
       <!-- a text glyph, not the inline SVG the app header uses:
            html2canvas silently drops the SVG and leaves an empty blue box -->
-      <div class="b-mark">=</div>
+      <div class="b-mark">${t("bill_mark")}</div>
       <div class="b-id">${t("brand")}<span>${t("b_sub")}</span></div>
       <div class="b-meta">
         <span>${t("b_no")}</span>
@@ -108,8 +107,8 @@ export function buildBill(){
         <tbody>${state.people.map(p => {
           const v = b[p];
           const share = paid[p] - v;   /* balance = paid − share  ⇒  share = paid − balance */
-          const bal = v > 0.005  ? `<span class="lbl">${esc(t("owed"))}</span> <span class="v">${amount(v)}</span>`
-                    : v < -0.005 ? `<span class="lbl">${esc(t("owes"))}</span> <span class="v">${amount(-v)}</span>`
+          const bal = v > 0 ? `<span class="lbl">${esc(t("owed"))}</span> <span class="v">${amount(toMajor(v))}</span>`
+                    : v < 0 ? `<span class="lbl">${esc(t("owes"))}</span> <span class="v">${amount(toMajor(-v))}</span>`
                     : `<span class="lbl">${esc(t("clear"))} ✓</span>`;
           return `<tr>
             <td><span class="b-who"><span class="d">${esc(initial(p))}</span>${esc(p)}</span></td>

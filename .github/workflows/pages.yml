@@ -1,0 +1,70 @@
+name: Deploy to Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race; let a newer push supersede an in-flight one.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Deploying a build that fails its own tests is worse than not deploying.
+      - name: Verify before shipping
+        env:
+          CHROME_BIN: google-chrome
+        run: node tools/verify.mjs
+
+      # GitHub Pages serves assets with a ~10 minute cache. Without this a
+      # deploy can serve fresh HTML against a stale module — a broken hybrid
+      # that looks like a random bug. There is no bundler, and ES module
+      # specifiers are static strings, so the commit SHA is stamped onto the
+      # HTML references AND onto every relative import, which keeps the whole
+      # module graph consistent per deploy.
+      - name: Stamp assets with the commit SHA
+        run: |
+          SHA=$(git rev-parse --short HEAD)
+          echo "stamping ?v=$SHA"
+          sed -i -E "s@(assets/(js|css)/[A-Za-z0-9/_.-]+\.(js|css))\"@\1?v=$SHA\"@g" index.html
+          find assets/js -name '*.js' -print0 \
+            | xargs -0 sed -i -E "s@(from \"\./[A-Za-z0-9/_.-]+\.js)\"@\1?v=$SHA\"@g"
+          grep -c "?v=$SHA" index.html
+
+      # Pages has no rewrite rules, so an unknown path hard-404s. Serving the
+      # shell from 404.html keeps deep links working if routing is ever added.
+      - name: SPA fallback
+        run: cp index.html 404.html
+
+      - name: Drop files the site does not need
+        run: rm -rf tools .github docs/media/*.png
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

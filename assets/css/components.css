@@ -186,6 +186,7 @@ select{
 .send .hint{margin:0 0 11px}
 .send-row{display:flex; gap:9px; flex-wrap:wrap}
 .send-row .btn{flex:1 1 auto}
-/* WhatsApp's own green, used only here, only as a brand cue on its button */
-.btn.wa{background:#25D366; color:#0B2B14}
-.btn.wa:hover{background:#1FBE5A}
+/* WhatsApp's own green, used only here, only as a brand cue on its button.
+   Tokens, not literals — see the brand-constant block in tokens.css. */
+.btn.wa{background:var(--wa); color:var(--wa-fg)}
+.btn.wa:hover{filter:brightness(.94)}

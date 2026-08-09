@@ -7,7 +7,7 @@ import { state, selected, setSelected, replaceState, save, restore, fromHash, sh
          stashCurrent, takeStashed, storageBroken } from "./state.js";
 import { applyTheme, cycleTheme, cycleSkin, restoreTheme, currentTheme, THEMES } from "./theme.js";
 import { render, addPerson, removePerson, addExpense, removeExpense,
-         toggleSel, toggleAll, settleUp, clearSettle } from "./ui.js";
+         toggleSel, toggleAll, settleUp } from "./ui.js";
 import { exportBill } from "./pdf.js";
 import { sendToWhatsApp, copyMessage } from "./share.js";
 import { toast } from "./utils.js";
@@ -45,7 +45,7 @@ function loadDemo(){
   });
   setSelected(new Set(state.people));
   history.replaceState(null, "", location.pathname);
-  save(); render(); settleUp();
+  save(); render();
   toast(t("m_demo"));
 }
 
@@ -54,7 +54,7 @@ function resetAll(){
   replaceState({ name:"", cur:state.cur, people:[], expenses:[] });
   setSelected(new Set());
   history.replaceState(null, "", location.pathname);
-  save(); render(); clearSettle();
+  save(); render();
 }
 
 async function share(){
@@ -85,7 +85,6 @@ function applyLang(){
 function toggleLang(){
   setLang(getLang() === "ar" ? "en" : "ar");
   applyLang();
-  clearSettle();
 }
 
 /* ── events. Rendered rows carry data-action, so one delegated listener
@@ -124,10 +123,7 @@ function wire(){
     }));
 
   document.getElementById("groupName").addEventListener("input", save);
-  document.getElementById("currency").addEventListener("change", () => {
-    save(); render();
-    clearSettle();   /* a shown settlement would keep quoting the old symbol */
-  });
+  document.getElementById("currency").addEventListener("change", () => { save(); render(); });
 
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
     if(currentTheme() === "system") applyTheme();

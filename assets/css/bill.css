@@ -5,14 +5,17 @@
    purpose: html2canvas reads normal screen styles, so print-only rules
    would render as an unstyled page. window.print() is the offline
    fallback, handled by the small @media print block at the end.
-   Colors are hard-coded light so the bill is identical from dark mode.
+   Colors come from --bill-* tokens, which every skin defines ONCE — not per
+   color mode. A dark invoice would waste ink and read badly on paper, so the
+   bill stays light even when the app is dark. A skin that defines none of them
+   still gets the readable defaults in tokens.css.
    ═══════════════════════════════════════════════════════ */
 #bill{
   /* physical `left`, not inset-inline-start: in RTL the logical property
      resolves to the right edge and would push the page into h-scroll */
   position:fixed; top:0; left:-20000px;   /* off-screen, but still laid out */
   z-index:-1;
-  width:733px; padding:22px 26px 18px;   /* 733px = A4 inner width at 96dpi, so 1px maps to 1px — no rescale */ background:#FFFFFF; color:#0D1117;
+  width:733px; padding:22px 26px 18px;   /* 733px = A4 inner width at 96dpi, so 1px maps to 1px — no rescale */ background:var(--bill-paper); color:var(--bill-ink);
   font-family:var(--font); text-align:start;   /* dir is set from JS per language */
   font-size:13px; line-height:1.6;
 }
@@ -25,93 +28,93 @@
 
 /* ── letterhead ───────────────────────────────────────── */
 #bill .b-top{display:flex; align-items:flex-start; gap:16px;
-  padding-bottom:16px; border-bottom:3px solid #1B62D6; margin-bottom:18px}
-#bill .b-mark{width:46px; height:46px; border-radius:12px; background:#1B62D6;
+  padding-bottom:16px; border-bottom:3px solid var(--bill-accent); margin-bottom:18px}
+#bill .b-mark{width:46px; height:46px; border-radius:12px; background:var(--bill-accent);
   display:grid; place-items:center; flex:none}
 #bill .b-mark{color:#fff; font-size:26px; font-weight:700; line-height:1}
 #bill .b-id{font-size:23px; font-weight:700; line-height:1.15}
-#bill .b-id span{display:block; font-size:11px; font-weight:500; color:#4A5568;
+#bill .b-id span{display:block; font-size:11px; font-weight:500; color:var(--bill-ink-2);
   margin-top:5px}
 #bill .b-meta{margin-inline-start:auto; text-align:end; font-size:11px;
-  color:#7A8698; line-height:1.7; flex:none; white-space:nowrap}
+  color:var(--bill-ink-3); line-height:1.7; flex:none; white-space:nowrap}
 #bill .b-meta span{display:block}
-#bill .b-meta b{display:block; color:#0D1117; font-weight:700; font-size:14px;
+#bill .b-meta b{display:block; color:var(--bill-ink); font-weight:700; font-size:14px;
   direction:ltr; font-variant-numeric:tabular-nums; margin:2px 0 6px}
 
 /* ── headline: group name + the one number that matters ── */
 #bill .b-head{display:flex; align-items:flex-end; gap:24px; margin-bottom:20px}
 #bill .b-head .t{flex:1; min-width:0}
 #bill .b-title{font-size:26px; font-weight:700; margin:0 0 6px; line-height:1.25}
-#bill .b-sub{font-size:12px; color:#4A5568; margin:0}
+#bill .b-sub{font-size:12px; color:var(--bill-ink-2); margin:0}
 #bill .b-total{flex:none; text-align:end; padding-inline-start:24px;
-  border-inline-start:1px solid #DDE3EC; margin:0}
-#bill .b-total dt{font-size:11px; color:#4A5568; margin:0 0 3px; text-align:end}
+  border-inline-start:1px solid var(--bill-rule); margin:0}
+#bill .b-total dt{font-size:11px; color:var(--bill-ink-2); margin:0 0 3px; text-align:end}
 #bill .b-total dd{margin:0; font-size:32px; font-weight:700; line-height:1;
   direction:ltr; font-variant-numeric:tabular-nums; white-space:nowrap}
-#bill .b-total dd small{font-size:14px; font-weight:600; color:#4A5568}
+#bill .b-total dd small{font-size:14px; font-weight:600; color:var(--bill-ink-2)}
 
 /* ── stat strip ───────────────────────────────────────── */
-#bill .b-stats{display:flex; border:1px solid #DDE3EC; border-radius:10px;
+#bill .b-stats{display:flex; border:1px solid var(--bill-rule); border-radius:10px;
   overflow:hidden; margin:0 0 20px}
-#bill .b-stats > div{flex:1; padding:10px 15px; border-inline-start:1px solid #DDE3EC; min-width:0}
+#bill .b-stats > div{flex:1; padding:10px 15px; border-inline-start:1px solid var(--bill-rule); min-width:0}
 #bill .b-stats > div:first-child{border-inline-start:none}
-#bill .b-stats dt{font-size:11px; color:#4A5568; margin:0 0 4px}
+#bill .b-stats dt{font-size:11px; color:var(--bill-ink-2); margin:0 0 4px}
 #bill .b-stats dd{margin:0; font-size:17px; font-weight:700; white-space:nowrap}
 #bill .b-stats dd .v{font-variant-numeric:tabular-nums; direction:ltr; unicode-bidi:isolate}
-#bill .b-stats dd small{font-size:11px; font-weight:600; color:#4A5568}
+#bill .b-stats dd small{font-size:11px; font-weight:600; color:var(--bill-ink-2)}
 
 /* ── sections ─────────────────────────────────────────── */
 #bill .b-sec{margin-bottom:16px}
 #bill h3{display:flex; align-items:center; gap:10px; font-size:12px; font-weight:700;
-  margin:0 0 11px; color:#4A5568}
-#bill h3::before{content:""; width:3px; height:16px; background:#1B62D6;
+  margin:0 0 11px; color:var(--bill-ink-2)}
+#bill h3::before{content:""; width:3px; height:16px; background:var(--bill-accent);
   border-radius:2px; flex:none}
-#bill h3 .c{margin-inline-start:auto; font-weight:600; color:#7A8698}
+#bill h3 .c{margin-inline-start:auto; font-weight:600; color:var(--bill-ink-3)}
 
 /* ── tables ───────────────────────────────────────────── */
 #bill table{width:100%; border-collapse:collapse; font-size:13px; table-layout:fixed}
-#bill th{text-align:start; font-size:11px; font-weight:700; color:#7A8698;
-  padding:0 11px 9px; border-bottom:1px solid #DDE3EC}
-#bill td{padding:8px 11px; border-bottom:1px solid #EEF2F7; vertical-align:top}
-#bill tbody tr:last-child td{border-bottom:1px solid #DDE3EC}
+#bill th{text-align:start; font-size:11px; font-weight:700; color:var(--bill-ink-3);
+  padding:0 11px 9px; border-bottom:1px solid var(--bill-rule)}
+#bill td{padding:8px 11px; border-bottom:1px solid var(--bill-rule-soft); vertical-align:top}
+#bill tbody tr:last-child td{border-bottom:1px solid var(--bill-rule)}
 /* the ID prefix above would otherwise out-specify .b-num on <th> */
 #bill th.b-num, #bill td.b-num{text-align:end}
 #bill .b-num{font-variant-numeric:tabular-nums; white-space:nowrap}
-#bill .b-dim{color:#7A8698; font-size:12px; font-weight:400}
+#bill .b-dim{color:var(--bill-ink-3); font-size:12px; font-weight:400}
 #bill .b-strong{font-weight:700}
 #bill tfoot td{padding-top:15px; font-weight:700; font-size:16px;
-  border-top:2px solid #0D1117; border-bottom:none}
+  border-top:2px solid var(--bill-ink); border-bottom:none}
 
 #bill .b-who{display:flex; align-items:center; gap:10px; min-width:0}
-#bill .b-who .d{width:27px; height:27px; border-radius:50%; border:1.5px solid #0D1117;
+#bill .b-who .d{width:27px; height:27px; border-radius:50%; border:1.5px solid var(--bill-ink);
   font-size:12px; font-weight:700; display:grid; place-items:center; flex:none}
 #bill .b-bal{white-space:nowrap}
-#bill .b-bal .lbl{font-size:11px; color:#4A5568}
+#bill .b-bal .lbl{font-size:11px; color:var(--bill-ink-2)}
 #bill .b-bal .v{font-variant-numeric:tabular-nums; font-weight:700;
   unicode-bidi:isolate; direction:ltr}
 
 /* ── التسوية — the payload, so it carries the only fill ── */
 #bill .b-move{display:grid; grid-template-columns:26px 1fr auto; align-items:center;
-  gap:8px 14px; padding:12px 16px; border:1px solid #DDE3EC; border-radius:10px;
-  margin-bottom:7px; font-size:14px; background:#F5F7FA}
-#bill .b-move .i{width:26px; height:26px; border-radius:50%; background:#1B62D6;
+  gap:8px 14px; padding:12px 16px; border:1px solid var(--bill-rule); border-radius:10px;
+  margin-bottom:7px; font-size:14px; background:var(--bill-fill)}
+#bill .b-move .i{width:26px; height:26px; border-radius:50%; background:var(--bill-accent);
   color:#fff; font-size:12px; font-weight:700; display:grid; place-items:center}
 #bill .b-move .p{min-width:0; display:flex; align-items:baseline; gap:8px; flex-wrap:wrap}
 #bill .b-move .n{font-weight:700}
 #bill .b-move .a{font-weight:700; direction:ltr; font-variant-numeric:tabular-nums;
   font-size:17px; white-space:nowrap}
-#bill .b-move .a small{font-size:11px; font-weight:600; color:#4A5568}
-#bill .b-clear{border:2px solid #1B62D6; border-radius:10px; padding:24px 20px;
-  text-align:center; background:#F5F7FA}
+#bill .b-move .a small{font-size:11px; font-weight:600; color:var(--bill-ink-2)}
+#bill .b-clear{border:2px solid var(--bill-accent); border-radius:10px; padding:24px 20px;
+  text-align:center; background:var(--bill-fill)}
 #bill .b-clear b{display:block; font-size:22px; font-weight:700; margin-bottom:5px}
-#bill .b-clear span{font-size:13px; color:#4A5568}
+#bill .b-clear span{font-size:13px; color:var(--bill-ink-2)}
 
 /* ── sign-off ─────────────────────────────────────────── */
 #bill .b-sign{margin-top:24px; display:flex; gap:48px}
-#bill .b-sign div{flex:1; border-top:1px solid #0D1117; padding-top:8px;
-  font-size:11px; color:#4A5568}
-#bill .b-foot{margin-top:18px; padding-top:11px; border-top:1px solid #DDE3EC;
-  display:flex; gap:18px; font-size:11px; color:#7A8698}
+#bill .b-sign div{flex:1; border-top:1px solid var(--bill-ink); padding-top:8px;
+  font-size:11px; color:var(--bill-ink-2)}
+#bill .b-foot{margin-top:18px; padding-top:11px; border-top:1px solid var(--bill-rule);
+  display:flex; gap:18px; font-size:11px; color:var(--bill-ink-3)}
 #bill .b-foot .l{margin-inline-start:auto; direction:ltr; white-space:nowrap}
 
 /* page-break hints for the window.print() fallback path. The PDF path does

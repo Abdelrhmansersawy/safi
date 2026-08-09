@@ -47,6 +47,13 @@
 
   --shadow:0 1px 2px rgba(30,23,16,.06), 0 6px 18px -10px rgba(30,23,16,.28);
   --shadow-lg:0 2px 4px rgba(30,23,16,.08), 0 20px 44px -18px rgba(30,23,16,.4);
+
+  /* invoice — a manuscript leaf: warm paper, brown-black ink, gold rules.
+     Declared outside the dark blocks, because paper is always light. */
+  --bill-paper:#FDFAF3; --bill-fill:#F5EFE0;
+  --bill-rule:#D8C9A9;  --bill-rule-soft:#EDE3CE;
+  --bill-ink:#1E1710;   --bill-ink-2:#5A4B39; --bill-ink-3:#8A7860;
+  --bill-accent:#A67C1A;          /* ذهبي — the ruled line of an illuminated page */
 }
 
 /* ───────────── ASIL · dark — lamplight on leather, not inverted paper ───────────── */

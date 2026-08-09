@@ -93,38 +93,6 @@ window.addEventListener("load", () => setTimeout(() => {
 }, 300));
 </script>`;
 
-/* A phone shell drawn in CSS, wrapping the real app in an iframe. Rendering the
-   frame rather than compositing keeps the screen pixel-exact and lets the app
-   lay out at true device width (393×852 logical, current iPhone Pro geometry). */
-async function deviceWrapper(name, innerUrl){
-  const html = `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
-  html,body{margin:0;height:100%;background:#EDEAE3;
-    display:grid;place-items:center;font-family:system-ui}
-  .phone{position:relative;width:417px;height:876px;border-radius:58px;padding:12px;
-    background:linear-gradient(155deg,#5B5F63,#2E3134 26%,#8E9398 52%,#33363A 76%,#5B5F63);
-    box-shadow:0 30px 60px -24px rgba(0,0,0,.55), 0 2px 0 rgba(255,255,255,.25) inset}
-  .screen{position:relative;width:393px;height:852px;border-radius:47px;overflow:hidden;
-    background:#000}
-  .screen iframe{width:393px;height:852px;border:0;display:block}
-  .island{position:absolute;top:11px;left:50%;transform:translateX(-50%);
-    width:124px;height:35px;border-radius:20px;background:#000;z-index:3}
-  .btn-s{position:absolute;background:#3A3D41;border-radius:2px}
-  .vol-up{left:-2px;top:176px;width:3px;height:56px}
-  .vol-dn{left:-2px;top:246px;width:3px;height:56px}
-  .action{left:-2px;top:118px;width:3px;height:34px}
-  .power{right:-2px;top:196px;width:3px;height:92px}
-  </style></head><body>
-  <div class="phone">
-    <div class="btn-s action"></div><div class="btn-s vol-up"></div>
-    <div class="btn-s vol-dn"></div><div class="btn-s power"></div>
-    <div class="screen"><div class="island"></div>
-      <iframe src="${innerUrl}" scrolling="no"></iframe></div>
-  </div></body></html>`;
-  const file = join(ROOT, `__dev_${name}.html`);
-  await writeFile(file, html);
-  return { file, url: `http://127.0.0.1:${PORT}/__dev_${name}.html` };
-}
-
 const PEOPLE = ["أحمد","كريم","محمد","يوسف","محمود"];
 const ITEMS = [
   {id:1, desc:"بنزين الطريق",   amount:900,  payer:"أحمد",  among:PEOPLE},
@@ -153,40 +121,45 @@ try{
     const png = join(OUT, `${s.name}.png`);
     await shoot(f.url, png, 420, 1500);
     if(has("magick")){
-      spawnSync("magick", [png, "-resize", "380x", "-strip", "-quality", "82",
-                           join(OUT, `${s.name}.jpg`)]);
+      /* WebP at method 6 is roughly half the bytes of an equivalent JPEG,
+         and GitHub renders it inline. */
+      spawnSync("magick", [png, "-resize", "360x", "-strip", "-quality", "76",
+                           "-define", "webp:method=6", join(OUT, `${s.name}.webp`)]);
       await unlink(png).catch(() => {});
-      console.log(`    ✓ ${s.name}.jpg`);
+      console.log(`    ✓ ${s.name}.webp`);
     }else{
       console.log(`    ✓ ${s.name}.png  (install ImageMagick to compress)`);
     }
   }
 
   if(has("ffmpeg")){
+    /* A smooth vertical pan over one tall screenshot, rather than a handful of
+       stepped frames. Panning a still is what makes it read as scrolling an
+       app instead of a slideshow, and it costs one render.
+       No device shell: it dates the asset and competes with the brand. The
+       padding is the app's own parchment plus a gold hairline — the frame is
+       صافي, not a phone. */
     console.log("  rendering the walkthrough…");
-    const steps = [
-      { people: [],     items: [] },
-      { people: PEOPLE, items: [] },
-      { people: PEOPLE, items: ITEMS.slice(0,2), opts:{ focus:"#expensesList" } },
-      { people: PEOPLE, items: ITEMS,            opts:{ focus:"#expensesList" } },
-      { people: PEOPLE, items: ITEMS,            opts:{ focus:"#balCard" } },
-      { people: PEOPLE, items: ITEMS,            opts:{ settle:true, focus:"#settle" } }
-    ];
-    for(let i = 0; i < steps.length; i++){
-      const f = await fixture(`frame${i}`, {
-        lang:"ar", skin:"asil", theme:"light",
-        inject: frameInject(steps[i].people, steps[i].items, steps[i].opts || {})
-      });
-      const d = await deviceWrapper(`frame${i}`, `http://127.0.0.1:${PORT}/__shot_frame${i}.html`);
-      tmp.push(f.file, d.file);
-      await shoot(d.url, `/tmp/safi_frame${i + 1}.png`, 470, 940);
-    }
+    const full = await fixture("walk", {
+      lang:"ar", skin:"asil", theme:"light",
+      inject: frameInject(PEOPLE, ITEMS, { settle:true })
+    });
+    tmp.push(full.file);
+    await shoot(full.url, "/tmp/safi_walk.png", 393, 2600);
+
+    const H = 690, W = 393, SECS = 5, FPS = 10;
     const pal = "/tmp/safi_palette.png";
-    spawnSync("ffmpeg", ["-y","-loglevel","error","-framerate","0.75","-i","/tmp/safi_frame%d.png",
-      "-vf","scale=340:-1:flags=lanczos,palettegen=max_colors=96", pal]);
-    spawnSync("ffmpeg", ["-y","-loglevel","error","-framerate","0.75","-i","/tmp/safi_frame%d.png",
-      "-i", pal, "-lavfi",
-      "scale=340:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=3",
+    /* hold at the top, glide down, hold at the settlement */
+    const pan = `crop=${W}:${H}:0:'min(max(0\,(t-0.9)*300)\,ih-${H})'`;
+    const brand = "pad=iw+28:ih+28:14:14:0xF6EFE0,pad=iw+4:ih+4:2:2:0xA67C1A";
+
+    spawnSync("ffmpeg", ["-y","-loglevel","error","-loop","1","-t",String(SECS),
+      "-i","/tmp/safi_walk.png","-vf",
+      `${pan},${brand},scale=252:-1:flags=lanczos,fps=${FPS},palettegen=max_colors=64`, pal]);
+    spawnSync("ffmpeg", ["-y","-loglevel","error","-loop","1","-t",String(SECS),
+      "-i","/tmp/safi_walk.png","-i",pal,"-lavfi",
+      `${pan},${brand},scale=252:-1:flags=lanczos,fps=${FPS}[x];`
+      + "[x][1:v]paletteuse=dither=bayer:bayer_scale=4",
       "-loop","0", join(OUT, "demo.gif")]);
     console.log("    ✓ demo.gif");
   }else{
@@ -234,15 +207,24 @@ try{
     }, 320));
     </script>` });
   tmp.push(pdfShot.file);
-  await shoot(pdfShot.url, join(OUT, "pdf.png"), 800, 1240);
+  await shoot(pdfShot.url, "/tmp/safi_pdf_full.png", 820, 1300);
+  /* The whole A4 sheet shrunk to README width is unreadable. Crop to the part
+     that carries the design and the answer: letterhead, headline total, and
+     the first rows. */
+  if(has("magick")){
+    spawnSync("magick", ["/tmp/safi_pdf_full.png", "-crop", "820x700+0+0", "+repage",
+                         "-bordercolor", "#D8C9A9", "-border", "1",
+                         join(OUT, "pdf.png")]);
+  }
 
   if(has("magick")){
     for(const n of ["whatsapp", "pdf"]){
-      spawnSync("magick", [join(OUT, `${n}.png`), "-resize", n === "pdf" ? "620x" : "400x",
-                           "-strip", "-quality", "84", join(OUT, `${n}.jpg`)]);
+      spawnSync("magick", [join(OUT, `${n}.png`), "-resize", n === "pdf" ? "620x" : "380x",
+                           "-strip", "-quality", "78", "-define", "webp:method=6",
+                           join(OUT, `${n}.webp`)]);
       await unlink(join(OUT, `${n}.png`)).catch(() => {});
     }
-    console.log("    ✓ whatsapp.jpg  ✓ pdf.jpg");
+    console.log("    ✓ whatsapp.webp  ✓ pdf.webp");
   }
 }finally{
   server.close();

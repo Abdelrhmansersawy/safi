@@ -49,7 +49,6 @@ export function removePerson(idx){
   selected.delete(name);
   save();
   render();
-  clearSettle();
 }
 
 /* ── expenses ── */
@@ -74,7 +73,6 @@ export function addExpense(){
   setSelected(new Set(state.people));
   save();
   render();
-  clearSettle();
   toast(t("m_saved"));
 }
 
@@ -82,7 +80,6 @@ export function removeExpense(id){
   state.expenses = state.expenses.filter(e => e.id !== id);
   save();
   render();
-  clearSettle();
 }
 
 export function toggleSel(idx){
@@ -98,15 +95,28 @@ export function toggleAll(){
 }
 
 /* ── settlement ── */
+/* The settlement is the answer the user came for, so it is rendered on every
+   change rather than hidden behind a button. It used to be cleared after each
+   edit, which also took the "send to the group" action away with it — the one
+   thing the app most wants the user to reach. `settleUp()` now only scrolls
+   to an answer that is already on screen. */
 export function settleUp(){
   if(!state.expenses.length) return toast(t("m_none"));
-  const moves = computeMoves();
+  renderSettlement();
+  document.getElementById("settle").scrollIntoView({ behavior:"smooth", block:"center" });
+}
+
+export function renderSettlement(){
   const box = document.getElementById("settle");
+  if(!state.expenses.length){ box.innerHTML = ""; return; }
+
+  const moves = computeMoves();
 
   if(!moves.length){
     box.innerHTML = `<div class="clear">
       <div class="big">${t("settled_big")} ✓</div>
-      <div class="sub">${t("settled_sub")}</div></div>`;
+      <div class="sub">${t("settled_sub")}</div>
+    </div>` + `<div class="card">${shareActions()}</div>`;
   }else{
     box.innerHTML = `<div class="card">
       <h2><span class="n">✓</span> ${t("settle_title", count(moves.length))}</h2>
@@ -120,7 +130,6 @@ export function settleUp(){
         <div class="amt">${fmt(toMajor(m.amount))}</div>
       </div>`).join("") + shareActions() + `</div>`;
   }
-  box.scrollIntoView({behavior:"smooth", block:"center"});
 }
 
 /* The point of the whole app is that this message gets sent — so the action
@@ -138,7 +147,6 @@ function shareActions(){
   </div>`;
 }
 
-export const clearSettle = () => { document.getElementById("settle").innerHTML = ""; };
 
 /* ── render ── */
 export function render(){
@@ -165,6 +173,7 @@ export function render(){
   renderSplit();
   renderExpenses();
   renderBalances();
+  renderSettlement();
 }
 
 export function renderSplit(){

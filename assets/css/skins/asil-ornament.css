@@ -161,3 +161,25 @@
 }
 
 [data-skin="asil"] #toast div{ border:1px solid var(--gold) }
+
+/* ── the invoice as a manuscript leaf ──────────────────────────
+   Structure the tokens cannot express. Scoped to the skin, so the
+   modern invoice is untouched and a future skin can do the same in
+   its own ornament file. */
+[data-skin="asil"] #bill .b-top{ border-bottom-width:2px }
+[data-skin="asil"] #bill .b-mark{
+  border-radius:8px;
+  box-shadow:0 0 0 1px var(--bill-paper) inset, 0 0 0 2px var(--bill-accent) inset;
+}
+[data-skin="asil"] #bill h3::before{ border-radius:0 }
+/* section headings get the ruled band of an illuminated page */
+[data-skin="asil"] #bill h3{
+  border-bottom:1px solid var(--bill-rule);
+  padding-bottom:6px;
+}
+[data-skin="asil"] #bill .b-move,
+[data-skin="asil"] #bill .b-clear{ border-radius:4px }
+[data-skin="asil"] #bill .b-who .d{ border-radius:4px }
+[data-skin="asil"] #bill .b-foot::before{
+  content:"❈"; color:var(--bill-accent); margin-inline-end:8px;
+}

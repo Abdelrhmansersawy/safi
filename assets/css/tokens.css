@@ -26,3 +26,24 @@
 /* --gold is optional ornament. Skins that do not define it fall back to
    their accent, so any ornament rule stays valid everywhere. */
 :root{ --gold:var(--accent); --gold-w:var(--accent-w); }
+
+/* ── The invoice contract ────────────────────────────────────────
+   The PDF is a separate surface from the app: it is printed, so it stays
+   light in every color mode, and a skin therefore defines these ONCE
+   (outside its dark blocks). These defaults keep a new skin's invoice
+   readable even if it defines none of them — override what you want.  */
+:root{
+  --bill-paper:#FFFFFF;      /* the sheet */
+  --bill-fill:#F5F7FA;       /* filled blocks: transfers, the settled state */
+  --bill-rule:#DDE3EC;       /* borders and column rules */
+  --bill-rule-soft:#EEF2F7;  /* row separators */
+  --bill-ink:#0D1117;        /* headings, amounts */
+  --bill-ink-2:#4A5568;      /* secondary text */
+  --bill-ink-3:#7A8698;      /* labels, captions */
+  --bill-accent:#1B62D6;     /* the letterhead rule, section marks, discs */
+}
+
+/* Third-party brand constants. Deliberately NOT per-skin: WhatsApp green
+   belongs to WhatsApp, so it must not shift with our themes. This is the one
+   place a literal hex is allowed outside assets/css/skins/ — see CONTRIBUTING. */
+:root{ --wa:#25D366; --wa-fg:#0B2B14; }

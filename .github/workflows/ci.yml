@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # ubuntu-latest ships Google Chrome; the harness needs a real browser
+      # because every assertion runs against the actual rendered app.
+      - name: Verify
+        env:
+          CHROME_BIN: google-chrome
+        run: node tools/verify.mjs
+
+      # Cheap guards that do not need a browser.
+      - name: No stray fixtures committed
+        run: |
+          if git ls-files | grep -E '^(__verify_|__shot_|__dev_|_s[0-9]|_f[0-9])'; then
+            echo "::error::generated fixtures were committed"
+            exit 1
+          fi
+
+      - name: Pages needs .nojekyll
+        run: test -f .nojekyll || { echo "::error::.nojekyll is missing"; exit 1; }

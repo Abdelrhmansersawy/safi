@@ -26,6 +26,7 @@ export const I18N = {
     wa_send:"ابعتها للجروب", wa_copy:"انسخ الرسالة",
     wa_details:"التفاصيل كلها هنا:",
     wa_hint:"ابعت التسوية في جروب الواتس، عشان محدش يحتاج يفكّر حد.",
+    wa_ps:"مفيش استعجال، بس عشان محدش ينسى 🙂",
     footer:"من غير تسجيل دخول · بياناتك محفوظة على جهازك", views:"مشاهدة",
     preparing:"بنجهّز الفاتورة…",
     empty_people:"ابدأ بإضافة الأسماء فوق", empty_expenses:"مافيش مصاريف لسه",
@@ -59,6 +60,7 @@ export const I18N = {
     pays_to:"←",
 
     b_sub:"فاتورة تقسيم مصاريف", b_no:"رقم الفاتورة", b_noname:"جروب من غير اسم",
+    bill_mark:"✦",
     b_legal:"كشف حساب بين الأصدقاء · مستند غير رسمي، مش فاتورة ضريبية",
     b_total:"إجمالي المصاريف",
     b_people:"عدد الأفراد", b_count:"عدد المصاريف", b_avg:"متوسط الفرد", b_moves:"تحويلات التسوية",
@@ -92,6 +94,7 @@ export const I18N = {
     wa_send:"Send to the group", wa_copy:"Copy message",
     wa_details:"Full breakdown:",
     wa_hint:"Send the settlement to the group chat, so nobody has to chase anyone.",
+    wa_ps:"No rush — just so nobody forgets 🙂",
     footer:"No sign-up · your data stays on your device", views:"views",
     preparing:"Preparing your bill…",
     empty_people:"Start by adding names above", empty_expenses:"No expenses yet",
@@ -125,6 +128,7 @@ export const I18N = {
     pays_to:"→",
 
     b_sub:"Expense split statement", b_no:"Bill no.", b_noname:"Untitled group",
+    bill_mark:"✦",
     b_legal:"A statement between friends · informal, not a tax invoice",
     b_total:"Total expenses",
     b_people:"People", b_count:"Expenses", b_avg:"Average each", b_moves:"Transfers",

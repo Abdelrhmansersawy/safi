@@ -213,6 +213,53 @@ async function run(){
           "html2canvas silently drops SVG and leaves a gap");
     check("invoice has real height", Number(b.h) > 500, bill);
 
+    /* 3a ── the invoice's NUMBERS, not just its shape.
+       Counting rows and columns let a unit-mixing bug ship: the ledger printed
+       a negative share and a payment 100× too large. Rendered in English so the
+       digits are Latin and parseable; the arithmetic is skin-independent. */
+    const f3a = await fixture("billmath", { lang:"en", skin:"modern", probe: `
+      import { replaceState, setSelected, state } from "./assets/js/state.js";
+      import { buildBill } from "./assets/js/bill.js";
+      import { totals } from "./assets/js/settle.js";
+      const num = s => Number(String(s).replace(/[^0-9.\\-]/g, ""));
+      window.addEventListener("load", () => setTimeout(() => {
+        ${SEED_STATE}
+        buildBill();
+        const el = document.getElementById("bill");
+        const tables = el.querySelectorAll("table");
+        // ledger = second table: name | paid | share | balance
+        const rows = [...tables[1].querySelectorAll("tbody tr")].map(tr => {
+          const c = [...tr.children].map(td => td.innerText.trim());
+          return { paid: num(c[1]), share: num(c[2]),
+                   bal: num(c[3]), owes: /owes/i.test(c[3]) };
+        });
+        // paid − share must equal the balance, with the sign the label claims
+        const consistent = rows.every(r => {
+          const signed = r.owes ? -Math.abs(r.bal) : Math.abs(r.bal);
+          return Math.abs((r.paid - r.share) - signed) < 0.005;
+        });
+        const shareSum = rows.reduce((s, r) => s + r.share, 0);
+        const paidSum  = rows.reduce((s, r) => s + r.paid, 0);
+        const stated   = totals().total / 100;
+        const noNeg    = rows.every(r => r.share >= 0 && r.paid >= 0);
+        // the detail table's amount column must foot to the stated total
+        const amounts = [...tables[0].querySelectorAll("tbody tr")]
+          .map(tr => num(tr.children[5].innerText));
+        const detailSum = amounts.reduce((s, v) => s + v, 0);
+        document.title = "MATH|consistent=" + consistent + "|noNeg=" + noNeg
+          + "|shareFoots=" + (Math.abs(shareSum - stated) < 0.02)
+          + "|paidFoots=" + (Math.abs(paidSum - stated) < 0.02)
+          + "|detailFoots=" + (Math.abs(detailSum - stated) < 0.02);
+      }, 500));` });
+    created.push(f3a.file);
+    const math = title((await dumpDom(f3a.url)).out);
+    const mm = Object.fromEntries(math.split("|").slice(1).map(kv => kv.split("=")));
+    check("invoice ledger: paid − share equals the balance", mm.consistent === "true", math);
+    check("invoice ledger: no negative shares or payments", mm.noNeg === "true", math);
+    check("invoice ledger: shares foot to the total", mm.shareFoots === "true", math);
+    check("invoice ledger: payments foot to the total", mm.paidFoots === "true", math);
+    check("invoice detail: amounts foot to the total", mm.detailFoots === "true", math);
+
     /* 3b ── regressions. Each of these shipped once; none may come back. */
     const f3b = await fixture("regress", { probe: `
       import { replaceState, setSelected, state, sanitize, nextExpenseId, fromHash } from "./assets/js/state.js";

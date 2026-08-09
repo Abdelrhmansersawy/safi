@@ -9,7 +9,7 @@
 [![Views](https://hits.sh/github.com/sersawy/safi.svg?style=for-the-badge&label=views&color=1B62D6)](https://hits.sh/github.com/sersawy/safi/)
 [![License](https://img.shields.io/badge/license-MIT-333?style=for-the-badge)](LICENSE)
 
-<img src="docs/media/demo.gif" width="340" alt="Adding people, logging expenses, and settling up">
+<img src="docs/media/demo.gif" width="300" alt="Scrolling through a trip: people, expenses, balances, and the settlement">
 
 </div>
 
@@ -27,12 +27,12 @@ Two complete visual systems, each with light and dark modes.
 
 | عربي أصيل — default | عربي أصيل · dark |
 |:---:|:---:|
-| <img src="docs/media/asil-light.jpg" width="300"> | <img src="docs/media/asil-dark.jpg" width="300"> |
+| <img src="docs/media/asil-light.webp" width="300"> | <img src="docs/media/asil-dark.webp" width="300"> |
 | Naskh type, parchment ground, eight-point star tessellation, illuminated headings, Arabic-Indic numerals | Lamplight on leather — not an inverted page |
 
 | Modern | Modern · dark · English |
 |:---:|:---:|
-| <img src="docs/media/modern-light.jpg" width="300"> | <img src="docs/media/modern-dark-en.jpg" width="300"> |
+| <img src="docs/media/modern-light.webp" width="300"> | <img src="docs/media/modern-dark-en.webp" width="300"> |
 | Four colors only: white, black, blue, red | Full LTR mirroring |
 
 ## Two features worth calling out
@@ -43,7 +43,7 @@ Two complete visual systems, each with light and dark modes.
 
 ### Send it to the group
 
-<img src="docs/media/whatsapp.jpg" width="360">
+<img src="docs/media/whatsapp.webp" width="360">
 
 The hard part of splitting a bill is not the arithmetic — it is asking your friends
 for money. One tap turns the settlement into a message, so the app does the asking.
@@ -71,7 +71,7 @@ No phone numbers, no accounts.
 
 ### PDF invoice
 
-<img src="docs/media/pdf.jpg" width="360">
+<img src="docs/media/pdf.webp" width="360">
 
 A real A4 document: every expense, each person's share, the transfers required, and
 signature lines. Downloads directly — no print dialog.
