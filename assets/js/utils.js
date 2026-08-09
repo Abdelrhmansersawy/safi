@@ -5,7 +5,21 @@ export const esc = s => String(s).replace(/[&<>"']/g,
 export const money = v =>
   v.toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
 
-export const initial = n => (String(n).trim()[0] || "?");
+/* [0] on "🙂 محمد" returns half a surrogate pair and renders as �.
+   Spreading iterates code points. */
+export const initial = n => ([...String(n).trim()][0] || "?");
+
+/* Identity key for duplicate detection. «احمد» and «أحمد» are the same person
+   to everyone except a string comparison — and two near-identical chips
+   produce a settlement telling someone to pay themselves. Normalizes the
+   comparison only; the name is always stored exactly as typed. */
+export const normKey = n => String(n)
+  .normalize("NFKC")
+  .replace(/[\u064B-\u0652\u0670]/g, "")   // harakat
+  .replace(/[أإآٱ]/g, "ا").replace(/ى/g, "ي").replace(/ة/g, "ه")
+  .replace(/\s+/g, " ")
+  .trim()
+  .toLowerCase();
 
 export const $  = sel => document.querySelector(sel);
 export const $$ = sel => [...document.querySelectorAll(sel)];

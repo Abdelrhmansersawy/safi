@@ -213,6 +213,71 @@ async function run(){
           "html2canvas silently drops SVG and leaves a gap");
     check("invoice has real height", Number(b.h) > 500, bill);
 
+    /* 3b ── regressions. Each of these shipped once; none may come back. */
+    const f3b = await fixture("regress", { probe: `
+      import { replaceState, setSelected, state, sanitize, nextExpenseId, fromHash } from "./assets/js/state.js";
+      import { balances, computeMoves, sharesOf, toCents } from "./assets/js/settle.js";
+      import { initial, normKey } from "./assets/js/utils.js";
+      window.addEventListener("load", () => setTimeout(() => {
+        const R = {};
+
+        // a person may legitimately be named __proto__
+        replaceState({name:"x", cur:"ج.م", people:["__proto__","أحمد"], expenses:[
+          {id:1, desc:"a", amount:100, payer:"أحمد", among:["__proto__","أحمد"]}]});
+        const b1 = balances();
+        R.proto = Object.keys(b1).length === 2 && b1["__proto__"] === -5000;
+
+        // shares foot exactly: 100 split three ways
+        replaceState({name:"x", cur:"ج.م", people:["a","b","c"], expenses:[
+          {id:1, desc:"d", amount:100, payer:"a", among:["a","b","c"]}]});
+        const sh = sharesOf(state.expenses[0]);
+        R.foot = Object.values(sh).reduce((x,y)=>x+y,0) === 10000;
+        // the transfers must move exactly what the creditors are owed —
+        // asserted as an invariant, not a magic number, so the remainder
+        // rule can change without the test lying
+        const mv = computeMoves();
+        const b2 = balances();
+        const owed = Object.keys(b2).reduce((x,k) => x + Math.max(0, b2[k]), 0);
+        R.movesExact = mv.reduce((x,m) => x + m.amount, 0) === owed
+                    && mv.every(m => Number.isInteger(m.amount));
+
+        // garbage from a hand-edited link must not become NaN
+        const dirty = sanitize({ name:"x", cur:"ج.م", people:["أ","ب","أ"], expenses:[
+          {id:1, desc:"bad", amount:"abc", payer:"أ", among:["أ"]},
+          {id:2, desc:"neg", amount:-5,    payer:"أ", among:["أ"]},
+          {id:3, desc:"ghost", amount:10,  payer:"مجهول", among:["أ"]},
+          {id:4, desc:"ok", amount:10,     payer:"أ", among:["أ","ب","مجهول"]}]});
+        R.sanitized = dirty.people.length === 2 && dirty.expenses.length === 1
+                   && dirty.expenses[0].among.length === 2;
+
+        // an id-less expense must not disable delete on every other row
+        replaceState({name:"x", cur:"ج.م", people:["a","b"], expenses:[
+          {desc:"noid", amount:10, payer:"a", among:["a","b"]}]});
+        R.ids = state.expenses.every(e => Number.isFinite(e.id)) && Number.isFinite(nextExpenseId());
+
+        // surrogate pairs and normalized duplicates
+        R.initial = initial("🙂 محمد") === "🙂";
+        R.dupe = normKey("احمد") === normKey("أحمد") && normKey("Ahmed") === normKey("ahmed");
+
+        // an unrelated fragment is not a Safi payload
+        history.replaceState(null, "", location.pathname + "#lang=ar");
+        R.hash = fromHash() === false;
+        history.replaceState(null, "", location.pathname);
+
+        document.title = "REG|" + Object.entries(R).map(([k,v]) => k+"="+v).join("|");
+      }, 400));` });
+    created.push(f3b.file);
+    const reg = title((await dumpDom(f3b.url)).out);
+    const r = Object.fromEntries(reg.split("|").slice(1).map(kv => kv.split("=")));
+    check("a person named __proto__ still has a balance", r.proto === "true", reg);
+    check("shares foot exactly (100 ÷ 3)", r.foot === "true", reg);
+    check("transfers are exact to the piastre", r.movesExact === "true", reg);
+    check("a hand-edited link is sanitized, never NaN", r.sanitized === "true", reg);
+    check("expenses always get a usable id", r.ids === "true", reg);
+    check("initials survive emoji (surrogate pairs)", r.initial === "true", reg);
+    check("duplicate names normalize across hamza and case", r.dupe === "true", reg);
+    check("an unrelated #fragment is not read as a group", r.hash === "true", reg);
+
     /* 4 ── shared links survive a round trip */
     const f4 = await fixture("link", { probe: `
       import { replaceState, setSelected, state, shareURL } from "./assets/js/state.js";

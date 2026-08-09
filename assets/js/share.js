@@ -11,7 +11,7 @@
    and be forwardable by someone who never opens صافي.
    ═══════════════════════════════════════════════════════════════ */
 import { state, shareURL } from "./state.js";
-import { computeMoves } from "./settle.js";
+import { computeMoves, toMajor, toCents } from "./settle.js";
 import { t } from "./i18n.js";
 import { amount } from "./format.js";
 import { toast } from "./utils.js";
@@ -24,7 +24,7 @@ const MAX_TEXT = 1600;
 
 export function buildMessage({ withLink = true } = {}){
   const moves = computeMoves();
-  const total = state.expenses.reduce((s, e) => s + e.amount, 0);
+  const total = toMajor(state.expenses.reduce((s, e) => s + toCents(e.amount), 0));
   const cur = state.cur;
   const title = state.name || t("b_noname");
 
@@ -39,7 +39,7 @@ export function buildMessage({ withLink = true } = {}){
     /* Each line starts with an Arabic name, so the paragraph resolves RTL and
        the trailing amount lands correctly. Do not lead with a digit here. */
     moves.forEach(m => {
-      lines.push(`• ${m.from} ${t("b_pays")} ${m.to}: ${amount(m.amount)} ${cur}`);
+      lines.push(`\u200F• ${m.from} ${t("b_pays")} ${m.to}: ${amount(toMajor(m.amount))} ${cur}`);
     });
   }else{
     lines.push("");

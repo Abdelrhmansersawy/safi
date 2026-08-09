@@ -6,12 +6,19 @@
    delegated listener in main.js reads these instead.
    ═══════════════════════════════════════════════════════════════ */
 import { state, selected, setSelected, save, nextExpenseId } from "./state.js";
-import { balances, computeMoves } from "./settle.js";
+import { balances, computeMoves, sharesOf, toMajor, toCents } from "./settle.js";
 import { t } from "./i18n.js";
-import { esc, initial, toast } from "./utils.js";
+import { esc, initial, toast, normKey } from "./utils.js";
 import { amount, count, palette } from "./format.js";
 
-const colorOf = n => palette()[state.people.indexOf(n) % palette().length];
+/* a name that is not in `people` yields index -1, and -1 % 8 is -1 —
+   palette()[-1] is undefined, which renders as background:undefined and makes
+   the avatar and its white initial vanish */
+const colorOf = n => {
+  const pal = palette();
+  const i = state.people.indexOf(n);
+  return i < 0 ? "var(--ink-3)" : pal[i % pal.length];
+};
 const fmt = v => `<span class="num">${amount(v)}</span> ${esc(state.cur)}`;
 
 /* ── people ── */
@@ -19,7 +26,7 @@ export function addPerson(){
   const input = document.getElementById("personName");
   const name = input.value.trim();
   if(!name) return;
-  if(state.people.includes(name)) return toast(t("m_exists"));
+  if(state.people.some(p => normKey(p) === normKey(name))) return toast(t("m_exists"));
   state.people.push(name);
   selected.add(name);
   input.value = "";
@@ -61,6 +68,10 @@ export function addExpense(){
   document.getElementById("amount").value = "";
   document.getElementById("desc").value = "";
   document.getElementById("desc").focus();
+  /* the selection used to persist, so an expense meant for everyone silently
+     recorded against whoever the last one was split between — the app's
+     number-one silent wrong-answer generator */
+  setSelected(new Set(state.people));
   save();
   render();
   clearSettle();
@@ -106,7 +117,7 @@ export function settleUp(){
         <div class="arrow">${t("pays_to")}</div>
         <div class="av" style="background:${colorOf(m.to)}">${esc(initial(m.to))}</div>
         <div class="who">${esc(m.to)}</div>
-        <div class="amt">${fmt(m.amount)}</div>
+        <div class="amt">${fmt(toMajor(m.amount))}</div>
       </div>`).join("") + shareActions() + `</div>`;
   }
   box.scrollIntoView({behavior:"smooth", block:"center"});
@@ -186,7 +197,7 @@ function renderExpenses(){
       <div class="meta">
         <div class="t">${esc(e.desc)}</div>
         <div class="s"><b>${esc(t("paid_by", e.payer))}</b> · ${who} ·
-          ${amount(e.amount / e.among.length)} ${esc(t("per"))}</div>
+          ${amount(toMajor(sharesOf(e)[e.among[0]]))} ${esc(t("per"))}</div>
       </div>
       <div class="amt num">${amount(e.amount)}</div>
       <button class="del" data-action="rm-expense" data-id="${e.id}"
@@ -196,7 +207,7 @@ function renderExpenses(){
 
   totalRow.style.display = "flex";
   document.getElementById("totalVal").innerHTML =
-    fmt(state.expenses.reduce((s, e) => s + e.amount, 0));
+    fmt(toMajor(state.expenses.reduce((s, e) => s + toCents(e.amount), 0)));
 }
 
 function renderBalances(){
@@ -207,9 +218,9 @@ function renderBalances(){
   const b = balances();
   document.getElementById("balances").innerHTML = state.people.map(p => {
     const v = b[p];
-    const cls = v > 0.005 ? "pos" : v < -0.005 ? "neg" : "zero";
-    const txt = v > 0.005 ? `${esc(t("owed"))} ${amount(v)}`
-              : v < -0.005 ? `${esc(t("owes"))} ${amount(-v)}`
+    const cls = v > 0 ? "pos" : v < 0 ? "neg" : "zero";
+    const txt = v > 0 ? `${esc(t("owed"))} ${amount(toMajor(v))}`
+              : v < 0 ? `${esc(t("owes"))} ${amount(toMajor(-v))}`
               : esc(t("clear"));
     return `<div class="bal">
       <div class="av" style="background:${colorOf(p)}">${esc(initial(p))}</div>

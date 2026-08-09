@@ -4,7 +4,7 @@
    rendered, inspected and screenshotted without generating a PDF.
    ═══════════════════════════════════════════════════════════════ */
 import { state } from "./state.js";
-import { balances, computeMoves } from "./settle.js";
+import { balances, computeMoves, sharesOf, totals, toMajor } from "./settle.js";
 import { t, L } from "./i18n.js";
 import { esc, initial } from "./utils.js";
 import { amount, count, palette } from "./format.js";
@@ -57,14 +57,14 @@ export function buildBill(){
       </div>
       <dl class="b-total">
         <dt>${t("b_total")}</dt>
-        <dd>${amount(total)} <small>${cur}</small></dd>
+        <dd>${amount(toMajor(total))} <small>${cur}</small></dd>
       </dl>
     </div>
 
     <dl class="b-stats">
       <div><dt>${t("b_people")}</dt><dd><span class="v">${count(state.people.length)}</span></dd></div>
       <div><dt>${t("b_count")}</dt><dd><span class="v">${count(state.expenses.length)}</span></dd></div>
-      <div><dt>${t("b_avg")}</dt><dd><span class="v">${amount(total / state.people.length)}</span> <small>${cur}</small></dd></div>
+      <div><dt>${t("b_avg")}</dt><dd><span class="v">${amount(toMajor(Math.round(total / state.people.length)))}</span> <small>${cur}</small></dd></div>
       <div><dt>${t("b_moves")}</dt><dd><span class="v">${count(moves.length)}</span></dd></div>
     </dl>
 
@@ -85,13 +85,13 @@ export function buildBill(){
             <td class="b-strong">${esc(e.desc)}</td>
             <td>${esc(e.payer)}</td>
             <td class="b-dim">${e.among.length === state.people.length ? esc(t("all")) : esc(e.among.join(t("listsep")))}</td>
-            <td class="b-num b-dim">${amount(e.amount / e.among.length)}</td>
+            <td class="b-num b-dim">${amount(toMajor(sharesOf(e)[e.among[0]]))}</td>
             <td class="b-num b-strong">${amount(e.amount)}</td>
           </tr>`).join("")}
         </tbody>
         <tfoot><tr>
           <td colspan="5">${t("total")}</td>
-          <td class="b-num">${amount(total)}</td>
+          <td class="b-num">${amount(toMajor(total))}</td>
         </tr></tfoot>
       </table>
     </div>
@@ -113,8 +113,8 @@ export function buildBill(){
                     : `<span class="lbl">${esc(t("clear"))} ✓</span>`;
           return `<tr>
             <td><span class="b-who"><span class="d">${esc(initial(p))}</span>${esc(p)}</span></td>
-            <td class="b-num">${amount(paid[p])}</td>
-            <td class="b-num">${amount(share)}</td>
+            <td class="b-num">${amount(toMajor(paid[p]))}</td>
+            <td class="b-num">${amount(toMajor(share))}</td>
             <td class="b-num b-bal">${bal}</td>
           </tr>`;
         }).join("")}</tbody>
@@ -131,7 +131,7 @@ export function buildBill(){
             <span class="b-dim">${t("b_pays")}</span>
             <span class="n">${esc(m.to)}</span>
           </span>
-          <span class="a">${amount(m.amount)} <small>${cur}</small></span>
+          <span class="a">${amount(toMajor(m.amount))} <small>${cur}</small></span>
         </div>`).join("")
         : `<div class="b-clear"><b>${t("settled_big")} ✓</b><span>${t("settled_sub")}</span></div>`}
     </div>

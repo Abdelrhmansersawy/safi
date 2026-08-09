@@ -3,7 +3,8 @@
    ═══════════════════════════════════════════════════════════════ */
 import { GITHUB, COUNTER } from "./config.js";
 import { L, t, getLang, setLang, restoreLang, paintStrings } from "./i18n.js";
-import { state, selected, setSelected, replaceState, save, restore, fromHash, shareURL } from "./state.js";
+import { state, selected, setSelected, replaceState, save, restore, fromHash, shareURL,
+         stashCurrent, takeStashed, storageBroken } from "./state.js";
 import { applyTheme, cycleTheme, cycleSkin, restoreTheme, currentTheme, THEMES } from "./theme.js";
 import { render, addPerson, removePerson, addExpense, removeExpense,
          toggleSel, toggleAll, settleUp, clearSettle } from "./ui.js";
@@ -123,7 +124,10 @@ function wire(){
     }));
 
   document.getElementById("groupName").addEventListener("input", save);
-  document.getElementById("currency").addEventListener("change", () => { save(); render(); });
+  document.getElementById("currency").addEventListener("change", () => {
+    save(); render();
+    clearSettle();   /* a shown settlement would keep quoting the old symbol */
+  });
 
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
     if(currentTheme() === "system") applyTheme();
@@ -151,10 +155,18 @@ async function countView(){
   restoreLang();
   restoreTheme();
 
-  let badLink = false;
+  let badLink = false, imported = false;
   try{
-    if(!fromHash()) restore();
+    if(location.hash.includes("g=")){
+      stashCurrent();          /* an import used to destroy the local group */
+      imported = fromHash();
+    }
+    if(!imported) restore();
   }catch(err){ badLink = true; restore(); }
+
+  /* Consume the fragment once imported. Leaving it means every reload re-imports
+     the sender's snapshot and silently discards whatever the user added since. */
+  if(imported || badLink) history.replaceState(null, "", location.pathname + location.search);
 
   setSelected(new Set(state.people));
   wire();
