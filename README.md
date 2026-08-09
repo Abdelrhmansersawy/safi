@@ -4,9 +4,8 @@
 
 **Split shared expenses with friends. No sign-up, no account, no server.**
 
-[![Live](https://img.shields.io/badge/live-safi-0E6F67?style=for-the-badge)](https://sersawy.github.io/safi/)
-[![Stars](https://img.shields.io/github/stars/sersawy/safi?style=for-the-badge&color=A67C1A)](https://github.com/sersawy/safi/stargazers)
-[![Views](https://hits.sh/github.com/sersawy/safi.svg?style=for-the-badge&label=views&color=1B62D6)](https://hits.sh/github.com/sersawy/safi/)
+[![Stars](https://img.shields.io/github/stars/Abdelrhmansersawy/safi?style=for-the-badge&color=A67C1A)](https://github.com/Abdelrhmansersawy/safi/stargazers)
+[![Views](https://hits.sh/github.com/Abdelrhmansersawy/safi.svg?style=for-the-badge&label=views&color=1B62D6)](https://hits.sh/github.com/Abdelrhmansersawy/safi/)
 [![License](https://img.shields.io/badge/license-MIT-333?style=for-the-badge)](LICENSE)
 
 <img src="docs/media/demo.gif" width="300" alt="Scrolling through a trip: people, expenses, balances, and the settlement">
@@ -120,11 +119,18 @@ group-name and currency fields were found to be silently discarding every edit.
 
 No build step. Static files, served as-is.
 
-**Settings → Pages → Deploy from a branch → `main` / `(root)`**
+`.github/workflows/pages.yml` builds and deploys on every push to `main`. It runs the
+verification suite first and refuses to ship a build that fails, then stamps the commit
+SHA onto the HTML asset references and every relative module import — GitHub Pages
+caches for about ten minutes, and without that a deploy can serve fresh HTML against a
+stale module.
 
-`.nojekyll` is committed so Jekyll doesn't strip `_`-prefixed paths. After deploying,
-set `GITHUB` in [`assets/js/config.js`](assets/js/config.js) to your repository URL so
-the star button points at the right place.
+To enable it: **Settings → Pages → Source: GitHub Actions**.
+
+> **Note:** Pages requires a public repository on a free personal account. While this
+> repo is private, CI still runs but the deploy job cannot publish.
+
+`.nojekyll` is committed so Jekyll doesn't strip `_`-prefixed paths.
 
 ## Architecture
 

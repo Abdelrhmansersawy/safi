@@ -1,7 +1,6 @@
 /* ═══════════ صافي — project configuration ═══════════ */
 
-/* ⚠ ضع رابط الريبو هنا / put your repository URL here */
-export const GITHUB = "https://github.com/sersawy/safi";
+export const GITHUB = "https://github.com/Abdelrhmansersawy/safi";
 
 /* ─────────────────────────────────────────────────────────────
    SKIN REGISTRY — the first entry is the default.
