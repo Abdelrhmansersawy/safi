@@ -4,6 +4,7 @@
 
 **Split shared expenses with friends. No sign-up, no account, no server.**
 
+[![Live](https://img.shields.io/badge/live-demo-0E6F67?style=for-the-badge)](https://abdelrhmansersawy.github.io/safi/)
 [![Stars](https://img.shields.io/github/stars/Abdelrhmansersawy/safi?style=for-the-badge&color=A67C1A)](https://github.com/Abdelrhmansersawy/safi/stargazers)
 [![Views](https://hits.sh/github.com/Abdelrhmansersawy/safi.svg?style=for-the-badge&label=views&color=1B62D6)](https://hits.sh/github.com/Abdelrhmansersawy/safi/)
 [![License](https://img.shields.io/badge/license-MIT-333?style=for-the-badge)](LICENSE)
@@ -126,9 +127,6 @@ caches for about ten minutes, and without that a deploy can serve fresh HTML aga
 stale module.
 
 To enable it: **Settings → Pages → Source: GitHub Actions**.
-
-> **Note:** Pages requires a public repository on a free personal account. While this
-> repo is private, CI still runs but the deploy job cannot publish.
 
 `.nojekyll` is committed so Jekyll doesn't strip `_`-prefixed paths.
 
