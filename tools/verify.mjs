@@ -306,6 +306,19 @@ async function run(){
         R.initial = initial("🙂 محمد") === "🙂";
         R.dupe = normKey("احمد") === normKey("أحمد") && normKey("Ahmed") === normKey("ahmed");
 
+        // the two chrome-edited fields must actually reach state: save() no
+        // longer reads the DOM, so a handler that forgets to push the value
+        // makes a typed group name and a chosen currency vanish silently
+        replaceState({name:"", cur:"ج.م", people:["a","b"], expenses:[]});
+        const gn = document.getElementById("groupName");
+        gn.value = "رحلة";
+        gn.dispatchEvent(new Event("input", { bubbles:true }));
+        const cu = document.getElementById("currency");
+        cu.value = "$";
+        cu.dispatchEvent(new Event("change", { bubbles:true }));
+        R.chrome = state.name === "رحلة" && state.cur === "$"
+                && document.getElementById("currency").value === "$";
+
         // an unrelated fragment is not a Safi payload
         history.replaceState(null, "", location.pathname + "#lang=ar");
         R.hash = fromHash() === false;
@@ -324,6 +337,7 @@ async function run(){
     check("initials survive emoji (surrogate pairs)", r.initial === "true", reg);
     check("duplicate names normalize across hamza and case", r.dupe === "true", reg);
     check("an unrelated #fragment is not read as a group", r.hash === "true", reg);
+    check("group name and currency reach state when edited", r.chrome === "true", reg);
 
     /* 4 ── shared links survive a round trip */
     const f4 = await fixture("link", { probe: `

@@ -63,6 +63,14 @@ export function replaceState(next){
    the caller surfaces it instead. */
 export let storageBroken = false;
 
+/* The two fields a user edits directly in the chrome rather than through a
+   form submit. save() deliberately does not read the DOM — state.js must not
+   know about elements — so the handlers push the values in. Leaving this out
+   is what made a typed group name vanish from the link, the message and the
+   invoice, and made the currency select snap back on every change. */
+export function setName(v){ state.name = String(v).slice(0, 60); }
+export function setCurrency(v){ state.cur = String(v).slice(0, 6); }
+
 export function save(){
   try{
     localStorage.setItem("safi", JSON.stringify(state));

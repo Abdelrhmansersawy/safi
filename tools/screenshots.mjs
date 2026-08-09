@@ -37,12 +37,29 @@ const serve = () => new Promise(ok => {
   s.listen(PORT, "127.0.0.1", () => ok(s));
 });
 
-const shoot = (url, out, w, h) => new Promise((ok, fail) => {
+const capture = (url, out, w, h) => new Promise((ok, fail) => {
   const c = spawn(BROWSER, ["--headless","--disable-gpu","--no-sandbox",
     `--window-size=${w},${h}`, "--virtual-time-budget=9000", `--screenshot=${out}`, url]);
   c.on("error", fail);
   c.on("close", () => ok());
 });
+
+/* This headless build ignores --window-size for LAYOUT — every page lays out
+   at a fixed 485px regardless — so a "393px phone" screenshot was really a
+   485px layout cropped to 393, which shifted the whole image. Pinning the app
+   inside an iframe of exact size gives it a real viewport; the wrapper is LTR
+   and the frame sits at 0,0, so the capture lines up with it exactly. */
+let pinCount = 0;
+async function shoot(url, out, w, h){
+  const name = `pin${pinCount++}`;
+  const file = join(ROOT, `__pin_${name}.html`);
+  await writeFile(file, `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;padding:0;background:#fff}
+iframe{position:absolute;top:0;left:0;width:${w}px;height:${h}px;border:0;display:block}
+</style></head><body><iframe src="${url}" scrolling="no"></iframe></body></html>`);
+  tmp.push(file);
+  await capture(`http://127.0.0.1:${PORT}/__pin_${name}.html`, out, w, h);
+}
 
 const has = bin => { try { return spawnSync(bin, ["-version"]).status === 0
                              || spawnSync(bin, ["--version"]).status === 0; } catch { return false; } };
@@ -109,9 +126,9 @@ const SHOTS = [
   { name:"modern-dark-en",  lang:"en", skin:"modern", theme:"dark"  }
 ];
 
+const tmp = [];
 const server = await serve();
 await mkdir(OUT, { recursive: true });
-const tmp = [];
 
 try{
   console.log("\n  rendering stills…");
@@ -119,7 +136,7 @@ try{
     const f = await fixture(s.name, { ...s, inject: DEMO_CLICK });
     tmp.push(f.file);
     const png = join(OUT, `${s.name}.png`);
-    await shoot(f.url, png, 420, 1500);
+    await shoot(f.url, png, 393, 1560);
     if(has("magick")){
       /* WebP at method 6 is roughly half the bytes of an equivalent JPEG,
          and GitHub renders it inline. */
@@ -184,7 +201,7 @@ try{
     }, 320));
     </script>` });
   tmp.push(waShot.file);
-  await shoot(waShot.url, join(OUT, "whatsapp.png"), 420, 700);
+  await shoot(waShot.url, join(OUT, "whatsapp.png"), 393, 720);
 
   const pdfShot = await fixture("pdf", { lang:"ar", skin:"asil", theme:"light", inject: `
     <script type="module">
@@ -209,10 +226,10 @@ try{
   tmp.push(pdfShot.file);
   await shoot(pdfShot.url, "/tmp/safi_pdf_full.png", 820, 1300);
   /* The whole A4 sheet shrunk to README width is unreadable. Crop to the part
-     that carries the design and the answer: letterhead, headline total, and
-     the first rows. */
+     that carries the design and the answer, cut on a section boundary:
+     letterhead, headline total, the detail table and its total row. */
   if(has("magick")){
-    spawnSync("magick", ["/tmp/safi_pdf_full.png", "-crop", "820x700+0+0", "+repage",
+    spawnSync("magick", ["/tmp/safi_pdf_full.png", "-crop", "820x628+0+0", "+repage",
                          "-bordercolor", "#D8C9A9", "-border", "1",
                          join(OUT, "pdf.png")]);
   }

@@ -4,7 +4,7 @@
 import { GITHUB, COUNTER } from "./config.js";
 import { L, t, getLang, setLang, restoreLang, paintStrings } from "./i18n.js";
 import { state, selected, setSelected, replaceState, save, restore, fromHash, shareURL,
-         stashCurrent, takeStashed, storageBroken } from "./state.js";
+         setName, setCurrency, stashCurrent, takeStashed, storageBroken } from "./state.js";
 import { applyTheme, cycleTheme, cycleSkin, restoreTheme, currentTheme, THEMES } from "./theme.js";
 import { render, addPerson, removePerson, addExpense, removeExpense,
          toggleSel, toggleAll, settleUp } from "./ui.js";
@@ -122,8 +122,15 @@ function wire(){
       if(e.key === "Enter") addExpense();
     }));
 
-  document.getElementById("groupName").addEventListener("input", save);
-  document.getElementById("currency").addEventListener("change", () => { save(); render(); });
+  document.getElementById("groupName").addEventListener("input", e => {
+    setName(e.target.value);
+    save();
+  });
+  document.getElementById("currency").addEventListener("change", e => {
+    setCurrency(e.target.value);
+    save();
+    render();   /* re-renders every amount, and the settlement, in the new symbol */
+  });
 
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
     if(currentTheme() === "system") applyTheme();

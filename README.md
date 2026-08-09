@@ -101,13 +101,20 @@ element bounds, so a table row is never sheared in half.
 
 ```bash
 python3 -m http.server 8000     # ES modules need HTTP; file:// fails on CORS
-node tools/verify.mjs           # 28 checks in headless Chromium
+node tools/verify.mjs           # 42 assertions in headless Chromium
+node tools/simulate.mjs         # walk a whole trip through the real UI
 node tools/screenshots.mjs      # regenerate everything in docs/media
 ```
 
-`verify.mjs` asserts the things that have actually broken here before: balances summing
-to zero, transfers clearing every balance, the PDF rendering something other than a blank
-canvas, Arabic staying shaped, and both languages having every key.
+**`verify.mjs`** asserts the things that have actually broken here: balances summing to
+zero, transfers clearing every balance, the invoice's arithmetic (not just its shape),
+the PDF rendering something other than a blank canvas, Arabic staying shaped, and both
+languages carrying every key.
+
+**`simulate.mjs`** walks one user through a whole trip on a 393px Arabic phone by typing
+into the real inputs and clicking the real buttons — nothing stubbed, no module function
+called directly. If a control is not reachable by a click, it fails. That is how the
+group-name and currency fields were found to be silently discarding every edit.
 
 ## Deploy
 

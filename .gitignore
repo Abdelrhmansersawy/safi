@@ -4,3 +4,6 @@ node_modules/
 
 # local editor/agent settings
 .claude/
+
+# regenerated on demand by tools/simulate.mjs --shots
+docs/media/steps/
