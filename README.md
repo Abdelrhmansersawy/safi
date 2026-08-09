@@ -109,15 +109,6 @@ node tools/screenshots.mjs      # regenerate everything in docs/media
 to zero, transfers clearing every balance, the PDF rendering something other than a blank
 canvas, Arabic staying shaped, and both languages having every key.
 
-## Run locally
-
-The app uses ES modules, so it needs to be served over HTTP — `file://` will fail on CORS.
-
-```bash
-python3 -m http.server 8000
-# http://localhost:8000
-```
-
 ## Deploy
 
 No build step. Static files, served as-is.
@@ -143,6 +134,7 @@ assets/css/
     asil-ornament.css   the ornament that makes it a manuscript page
 assets/js/
   config.js             skin registry, repo URL, CDN endpoints
+  share.js              settlement → WhatsApp / clipboard message
   i18n.js               dictionaries + t() + string painting
   state.js              state, persistence, link encoding
   settle.js             the settlement math — no DOM
@@ -151,6 +143,9 @@ assets/js/
   pdf.js                rasterizes and paginates it
   theme.js              color mode + skin
   main.js               boot and event wiring
+tools/
+  verify.mjs            headless assertions, no dependencies
+  screenshots.mjs       regenerates docs/media
 ```
 
 `settle.js` is pure math and `bill.js` produces only DOM, so both can be exercised
