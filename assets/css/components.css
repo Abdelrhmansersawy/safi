@@ -178,3 +178,14 @@ select{
 #pdfWait p{margin:0; font-size:15px; font-weight:600; color:var(--ink-2)}
 @keyframes spin{to{transform:rotate(360deg)}}
 @media (prefers-reduced-motion: reduce){ #pdfWait .sp{animation-duration:2.4s} }
+
+/* ── send the settlement to the group ──
+   Sits at the foot of the settlement card: the moment the user has the
+   answer is the moment they will actually send it. */
+.send{margin-top:16px; padding-top:15px; border-top:1px dashed var(--line)}
+.send .hint{margin:0 0 11px}
+.send-row{display:flex; gap:9px; flex-wrap:wrap}
+.send-row .btn{flex:1 1 auto}
+/* WhatsApp's own green, used only here, only as a brand cue on its button */
+.btn.wa{background:#25D366; color:#0B2B14}
+.btn.wa:hover{background:#1FBE5A}

@@ -8,6 +8,7 @@ import { applyTheme, cycleTheme, cycleSkin, restoreTheme, currentTheme, THEMES }
 import { render, addPerson, removePerson, addExpense, removeExpense,
          toggleSel, toggleAll, settleUp, clearSettle } from "./ui.js";
 import { exportBill } from "./pdf.js";
+import { sendToWhatsApp, copyMessage } from "./share.js";
 import { toast } from "./utils.js";
 import { count } from "./format.js";
 
@@ -15,19 +16,19 @@ import { count } from "./format.js";
    of the app before typing anything ── */
 const DEMO = {
   ar: { name:"رحلة الساحل الشمالي", cur:"ج.م",
-        people:["سيرساوي","أحمد","منى","كريم"],
+        people:["أحمد","كريم","محمد","يوسف","محمود"],
         items:[["بنزين الطريق", 900, 0, null],
                ["إيجار الشاليه", 2400, 2, null],
                ["عشا مطعم السمك", 1250, 1, null],
                ["قهوة وحاجات", 180, 3, [3, 0]],
-               ["تذاكر الأكواريوم", 640, 2, null]] },
+               ["تذاكر الأكواريوم", 640, 4, null]] },
   en: { name:"North Coast trip", cur:"$",
-        people:["Sersawy","Ahmed","Mona","Karim"],
+        people:["Ahmed","Karim","Mohamed","Youssef","Mahmoud"],
         items:[["Fuel for the drive", 900, 0, null],
                ["Beach house", 2400, 2, null],
                ["Seafood dinner", 1250, 1, null],
                ["Coffee run", 180, 3, [3, 0]],
-               ["Aquarium tickets", 640, 2, null]] }
+               ["Aquarium tickets", 640, 4, null]] }
 };
 
 function loadDemo(){
@@ -103,6 +104,8 @@ function wire(){
       "settle":      () => settleUp(),
       "share":       () => share(),
       "pdf":         () => exportBill(el),
+      "whatsapp":    () => sendToWhatsApp(),
+      "copy-msg":    () => copyMessage(),
       "demo":        () => loadDemo(),
       "reset":       () => resetAll(),
       "lang":        () => toggleLang(),

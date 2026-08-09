@@ -35,16 +35,79 @@ Two complete visual systems, each with light and dark modes.
 | <img src="docs/media/modern-light.jpg" width="300"> | <img src="docs/media/modern-dark-en.jpg" width="300"> |
 | Four colors only: white, black, blue, red | Full LTR mirroring |
 
+## Two features worth calling out
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### Send it to the group
+
+<img src="docs/media/whatsapp.jpg" width="360">
+
+The hard part of splitting a bill is not the arithmetic — it is asking your friends
+for money. One tap turns the settlement into a message, so the app does the asking.
+
+```
+🧾 صافي — رحلة الساحل الشمالي
+
+إجمالي المصاريف: ٥٬٣٧٠٫٠٠ ج.م
+
+التسوية المطلوبة:
+• يوسف يدفع لـ محمد: ٩٤٨٫٠٠ ج.م
+• محمود يدفع لـ محمد: ٣٩٨٫٠٠ ج.م
+• أحمد يدفع لـ محمد: ١٦٫٠٠ ج.م
+• أحمد يدفع لـ كريم: ٢١٢٫٠٠ ج.م
+
+التفاصيل كلها هنا:
+https://…/#g=eyJuYW1l…
+```
+
+Opens WhatsApp with the message ready to send, or copies it for any other app.
+No phone numbers, no accounts.
+
+</td>
+<td width="50%" valign="top">
+
+### PDF invoice
+
+<img src="docs/media/pdf.jpg" width="360">
+
+A real A4 document: every expense, each person's share, the transfers required, and
+signature lines. Downloads directly — no print dialog.
+
+The invoice is **rasterized on purpose**. jsPDF has no Arabic shaping or bidi, so
+laying out text runs would emit «صافي» as disconnected, reversed letters. The browser
+shapes it correctly, so the page is photographed instead. Page breaks snap to measured
+element bounds, so a table row is never sheared in half.
+
+</td>
+</tr>
+</table>
+
 ## Features
 
 - **Minimum transfers** — greedy largest-first settlement; pairing the biggest debtor
   with the biggest creditor clears at least one of them per transfer.
 - **Share by link** — group state is base64url-encoded into the URL fragment. No backend.
+- **Send to the group** — the settlement as a ready-to-send WhatsApp message.
 - **PDF invoice** — one-click download, correct Arabic, page breaks that never cut a row.
 - **Bilingual** — Arabic (default) and English, with full RTL/LTR mirroring.
 - **Two skins × three color modes** — light, dark, or follow the OS.
 - **Offline-tolerant** — the app itself has zero runtime dependencies; only PDF export
   fetches a library, and it falls back to the print dialog when offline.
+
+## Development
+
+```bash
+python3 -m http.server 8000     # ES modules need HTTP; file:// fails on CORS
+node tools/verify.mjs           # 28 checks in headless Chromium
+node tools/screenshots.mjs      # regenerate everything in docs/media
+```
+
+`verify.mjs` asserts the things that have actually broken here before: balances summing
+to zero, transfers clearing every balance, the PDF rendering something other than a blank
+canvas, Arabic staying shaped, and both languages having every key.
 
 ## Run locally
 

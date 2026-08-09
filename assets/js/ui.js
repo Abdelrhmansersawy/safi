@@ -107,9 +107,24 @@ export function settleUp(){
         <div class="av" style="background:${colorOf(m.to)}">${esc(initial(m.to))}</div>
         <div class="who">${esc(m.to)}</div>
         <div class="amt">${fmt(m.amount)}</div>
-      </div>`).join("") + `</div>`;
+      </div>`).join("") + shareActions() + `</div>`;
   }
   box.scrollIntoView({behavior:"smooth", block:"center"});
+}
+
+/* The point of the whole app is that this message gets sent — so the action
+   sits at the end of the settlement, where the user has just seen the answer,
+   rather than buried in the bottom bar. */
+function shareActions(){
+  return `<div class="send">
+    <p class="hint">${esc(t("wa_hint"))}</p>
+    <div class="send-row">
+      <button class="btn wa" data-action="whatsapp">
+        <span aria-hidden="true">💬</span> ${esc(t("wa_send"))}
+      </button>
+      <button class="btn btn-soft" data-action="copy-msg">${esc(t("wa_copy"))}</button>
+    </div>
+  </div>`;
 }
 
 export const clearSettle = () => { document.getElementById("settle").innerHTML = ""; };
