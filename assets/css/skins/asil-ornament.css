@@ -1,0 +1,163 @@
+/* ═══════════════════════════════════════════════════════════════
+   عربي أصيل — the default skin
+   ───────────────────────────────────────────────────────────────
+   tokens.css already swapped color, radius, border weight and type.
+   Everything here is the ornament that makes it a manuscript page
+   rather than a recolored app:
+
+     · نجمة ثمانية  an eight-point star tessellation on the ground
+     · عنوان        an illuminated band at the head of every section
+     · إطار مزدوج   a double frame inset inside every leaf
+     · تذهيب        gold hairlines, corner marks and flourishes
+
+   Gold NEVER carries meaning — it is decoration only. Black ink is the
+   action, teal is "owed to", عنابي is "owes". Every rule is scoped to
+   [data-skin="asil"], so none of it can leak into the modern skin.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ───────── the ground: tessellated eight-point stars ───────── */
+[data-skin="asil"] body{
+  background-color:var(--sand);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23A67C1A' stroke-opacity='0.17' stroke-width='1'%3E%3Crect x='22' y='22' width='20' height='20'/%3E%3Crect x='22' y='22' width='20' height='20' transform='rotate(45 32 32)'/%3E%3Crect x='-10' y='-10' width='20' height='20'/%3E%3Crect x='-10' y='-10' width='20' height='20' transform='rotate(45 0 0)'/%3E%3Crect x='54' y='-10' width='20' height='20'/%3E%3Crect x='54' y='-10' width='20' height='20' transform='rotate(45 64 0)'/%3E%3Crect x='-10' y='54' width='20' height='20'/%3E%3Crect x='-10' y='54' width='20' height='20' transform='rotate(45 0 64)'/%3E%3Crect x='54' y='54' width='20' height='20'/%3E%3Crect x='54' y='54' width='20' height='20' transform='rotate(45 64 64)'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:64px 64px;
+  background-attachment:fixed;
+  line-height:1.9;              /* Naskh sits lower and needs the leading */
+}
+[data-skin="asil"][data-theme="dark"] body,
+[data-skin="asil"] body{ background-position:center top; }
+@media (prefers-color-scheme: dark){
+  [data-skin="asil"]:not([data-theme="light"]) body{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23D8B45C' stroke-opacity='0.13' stroke-width='1'%3E%3Crect x='22' y='22' width='20' height='20'/%3E%3Crect x='22' y='22' width='20' height='20' transform='rotate(45 32 32)'/%3E%3Crect x='-10' y='-10' width='20' height='20'/%3E%3Crect x='54' y='-10' width='20' height='20'/%3E%3Crect x='-10' y='54' width='20' height='20'/%3E%3Crect x='54' y='54' width='20' height='20'/%3E%3C/g%3E%3C/svg%3E");
+  }
+}
+[data-skin="asil"][data-theme="dark"] body{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cg fill='none' stroke='%23D8B45C' stroke-opacity='0.13' stroke-width='1'%3E%3Crect x='22' y='22' width='20' height='20'/%3E%3Crect x='22' y='22' width='20' height='20' transform='rotate(45 32 32)'/%3E%3Crect x='-10' y='-10' width='20' height='20'/%3E%3Crect x='54' y='-10' width='20' height='20'/%3E%3Crect x='-10' y='54' width='20' height='20'/%3E%3Crect x='54' y='54' width='20' height='20'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Naskh runs smaller than a UI sans at the same px — size everything up */
+[data-skin="asil"] .brand h1{ font-size:27px; line-height:1.5 }
+[data-skin="asil"] .brand p{ font-size:13.5px }
+[data-skin="asil"] .card > h2{ font-size:18px }
+[data-skin="asil"] .hint{ font-size:14.5px }
+[data-skin="asil"] .exp .t{ font-size:16.5px }
+[data-skin="asil"] .exp .s{ font-size:14px }
+[data-skin="asil"] .bal .nm{ font-size:16.5px }
+[data-skin="asil"] .btn{ font-size:16.5px }
+[data-skin="asil"] .toggle,[data-skin="asil"] .chip{ font-size:15px }
+[data-skin="asil"] #groupName{ font-size:23px }
+[data-skin="asil"] .clear .big{ font-size:30px }
+
+/* ───────── the leaf: a double frame inside every card ───────── */
+[data-skin="asil"] .card{
+  position:relative;
+  box-shadow:
+    0 0 0 4px var(--card) inset,
+    0 0 0 5px color-mix(in srgb, var(--gold) 42%, transparent) inset,
+    var(--shadow);
+}
+
+/* ───────── العنوان: the illuminated heading band ───────── */
+[data-skin="asil"] .card > h2{
+  background:linear-gradient(180deg,
+    color-mix(in srgb, var(--gold) 13%, transparent),
+    color-mix(in srgb, var(--gold) 5%, transparent));
+  border:1px solid color-mix(in srgb, var(--gold) 55%, transparent);
+  border-radius:var(--r-s);
+  padding:9px 13px;
+  margin:0 0 12px;
+  gap:11px;
+}
+[data-skin="asil"] .card > h2::after{
+  content:"❊";
+  margin-inline-start:auto;
+  color:var(--gold);
+  font-size:14px;
+  opacity:.85;
+}
+[data-skin="asil"] .card > h2 .n{
+  background:transparent;
+  color:var(--accent);
+  border:1px solid color-mix(in srgb, var(--gold) 65%, transparent);
+  border-radius:50%;
+}
+
+/* ───────── the medallion: an eight-point star, not two bars ───────── */
+[data-skin="asil"] .mark{
+  background:var(--accent);
+  border:2px solid var(--gold);
+  border-radius:var(--r-m);
+  box-shadow:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23F3E7C9' stroke-width='1.6'%3E%3Crect x='12' y='12' width='16' height='16'/%3E%3Crect x='12' y='12' width='16' height='16' transform='rotate(45 20 20)'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:100% 100%;
+}
+[data-skin="asil"] .mark svg{ display:none }
+
+/* ───────── ornamental separators ───────── */
+[data-skin="asil"] .tools .sep{
+  width:auto; height:auto; background:none;
+  color:var(--gold); font-size:12px; line-height:1;
+}
+[data-skin="asil"] .tools .sep::before{ content:"✦" }
+
+/* ───────── controls ───────── */
+/* the action is black ink, ringed by a gold hairline the way a heading
+   would be ruled in the margin */
+[data-skin="asil"] .btn{
+  border-radius:var(--r-s);
+  box-shadow:0 0 0 2px var(--card), 0 0 0 3px color-mix(in srgb, var(--gold) 50%, transparent);
+}
+[data-skin="asil"] .btn-soft{
+  box-shadow:0 0 0 2px var(--card), 0 0 0 3px color-mix(in srgb, var(--gold) 35%, transparent);
+}
+[data-skin="asil"] .bar{ border-top:1px solid var(--gold) }
+
+[data-skin="asil"] .chip,
+[data-skin="asil"] .toggle,
+[data-skin="asil"] .bal .v{ border-radius:var(--r-s) }
+[data-skin="asil"] .toggle[aria-pressed="true"]{
+  background:var(--gold-w);
+  border-color:var(--gold);
+  color:var(--ink);
+}
+[data-skin="asil"] .ghost{ border-radius:var(--r-s) }
+
+/* ───────── التسوية: the settled state gets full illumination ───────── */
+[data-skin="asil"] .clear{
+  border:1.5px solid var(--gold);
+  box-shadow:
+    0 0 0 5px var(--card) inset,
+    0 0 0 6px color-mix(in srgb, var(--gold) 45%, transparent) inset;
+}
+[data-skin="asil"] .clear .big::before,
+[data-skin="asil"] .clear .big::after{
+  content:"❊"; color:var(--gold); font-size:17px;
+  vertical-align:middle; margin:0 12px; opacity:.85;
+}
+[data-skin="asil"] .pay{
+  box-shadow:none;
+  border-inline-start:3px solid var(--gold);
+}
+
+/* ───────── the margin rules of a bound page ───────── */
+@media (min-width:760px){
+  [data-skin="asil"] .wrap{ position:relative }
+  [data-skin="asil"] .wrap::before,
+  [data-skin="asil"] .wrap::after{
+    content:""; position:absolute; top:12px; bottom:12px; width:1px;
+    background:linear-gradient(180deg, transparent,
+      color-mix(in srgb, var(--gold) 55%, transparent) 12%,
+      color-mix(in srgb, var(--gold) 55%, transparent) 88%, transparent);
+  }
+  [data-skin="asil"] .wrap::before{ inset-inline-start:-26px }
+  [data-skin="asil"] .wrap::after{ inset-inline-end:-26px }
+}
+
+/* ───────── colophon ───────── */
+[data-skin="asil"] footer{ font-size:13px }
+[data-skin="asil"] footer b{ color:var(--gold) }
+[data-skin="asil"] footer::after{
+  content:"❈"; display:block; color:var(--gold);
+  font-size:13px; margin-top:7px; opacity:.75;
+}
+
+[data-skin="asil"] #toast div{ border:1px solid var(--gold) }

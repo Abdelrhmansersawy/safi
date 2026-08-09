@@ -1,0 +1,78 @@
+/* ═══════════════════════════════════════════════════════════════
+   SKIN · asil (عربي أصيل) — parchment / ink / turquoise / gold
+   Tokens only. The ornament that makes it a manuscript page lives
+   in skins/asil-ornament.css.
+   ═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════
+   عربي أصيل · ASIL — light
+   Warm parchment ground, brown-black ink, turquoise (فيروزي) as the
+   working color and gold (ذهبي) reserved for ornament only. Corners
+   soften, borders thicken, and the type turns to Naskh.
+   ink 14.9:1 · ink-2 7.1:1 · ink-3 4.6:1 · accent 5.4:1 · neg 5.6:1
+   ═══════════════════════════════════════════════════════════════ */
+:root[data-skin="asil"]{
+  --sand:#F6EFE0;        /* ورق — aged paper */
+  --card:#FDF9F0;
+  --sand-2:#EFE5D2;
+  --line:#DCCDB0;
+
+  --ink:#1E1710;         /* حبر — warm brown-black */
+  --ink-2:#544636;
+  --ink-3:#8A7860;
+
+  --accent:#0D6E66;      /* فيروزي — the working color */
+  --accent-w:#DDEDE9;
+  /* حبر — the action color is black ink, not the accent. Teal stays as
+     the "owed to" semantic only, so black/gold/teal/عنابي each own one job. */
+  --btn:#1A1410;
+  --btn-d:#3A3026;
+  --btn-fg:#FDF9F0;
+
+  --pos:#0D6E66;
+  --pos-w:#DDEDE9;
+  --neg:#9C2B22;         /* عنابي */
+  --neg-w:#F6E4E1;
+
+  --gold:#A67C1A;        /* ornament only — never carries meaning */
+  --gold-w:#F3E7C9;
+
+  --logo-a:#1B9A8E; --logo-b:#0E6F67; --logo-c:#0A574F;
+
+  --r-s:6px; --r-m:8px; --r-l:12px; --r-pill:999px;
+  --border:1.5px;
+  --font:'Amiri','Scheherazade New','Times New Roman',serif;
+  --font-display:'Aref Ruqaa','Amiri',serif;
+  --display-weight:700;
+  --display-spacing:0;
+
+  --shadow:0 1px 2px rgba(30,23,16,.06), 0 6px 18px -10px rgba(30,23,16,.28);
+  --shadow-lg:0 2px 4px rgba(30,23,16,.08), 0 20px 44px -18px rgba(30,23,16,.4);
+}
+
+/* ───────────── ASIL · dark — lamplight on leather, not inverted paper ───────────── */
+@media (prefers-color-scheme: dark){
+  :root[data-skin="asil"]:not([data-theme="light"]){
+    --sand:#16110B; --card:#221A11; --sand-2:#2C2216; --line:#453522;
+    --ink:#F4EADA; --ink-2:#C8B79D; --ink-3:#9B8A72;
+    --accent:#5FC9BC; --accent-w:#123029;
+    --btn:#F4EADA; --btn-d:#FFFFFF; --btn-fg:#16110B;
+    --pos:#5FC9BC; --pos-w:#123029;
+    --neg:#E8837A; --neg-w:#331A17;
+    --gold:#D8B45C; --gold-w:#33280F;
+    --logo-a:#5FC9BC; --logo-b:#0E6F67; --logo-c:#0A574F;
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -12px rgba(0,0,0,.75);
+    --shadow-lg:0 2px 4px rgba(0,0,0,.55), 0 24px 48px -20px rgba(0,0,0,.85);
+  }
+}
+:root[data-skin="asil"][data-theme="dark"]{
+  --sand:#16110B; --card:#221A11; --sand-2:#2C2216; --line:#453522;
+  --ink:#F4EADA; --ink-2:#C8B79D; --ink-3:#9B8A72;
+  --accent:#5FC9BC; --accent-w:#123029;
+  --btn:#F4EADA; --btn-d:#FFFFFF; --btn-fg:#16110B;
+  --pos:#5FC9BC; --pos-w:#123029;
+  --neg:#E8837A; --neg-w:#331A17;
+  --gold:#D8B45C; --gold-w:#33280F;
+  --logo-a:#5FC9BC; --logo-b:#0E6F67; --logo-c:#0A574F;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -12px rgba(0,0,0,.75);
+  --shadow-lg:0 2px 4px rgba(0,0,0,.55), 0 24px 48px -20px rgba(0,0,0,.85);
+}

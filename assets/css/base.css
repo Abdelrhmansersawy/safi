@@ -1,0 +1,26 @@
+/* ═══════════ BASE — reset, page, shared primitives ═══════════ */
+*{box-sizing:border-box}
+html,body{margin:0; padding:0}
+
+body{
+  font-family:var(--font); background:var(--sand); color:var(--ink);
+  font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  padding:0 16px calc(88px + env(safe-area-inset-bottom));
+}
+body.locked{overflow:hidden}
+
+button,input,select{font-family:inherit; font-size:inherit; color:inherit}
+button{cursor:pointer; border:none; background:none}
+:focus-visible{outline:2.5px solid var(--accent); outline-offset:2px; border-radius:6px}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important} }
+
+/* money and any run of digits: isolated so bidi can't reorder «عليه 50.00» */
+.num{font-variant-numeric:tabular-nums; direction:ltr; display:inline-block; unicode-bidi:isolate}
+
+.wrap{max-width:640px; margin:0 auto}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0)}
+
+ul{list-style:none; margin:0; padding:0}
+
+footer{text-align:center; font-size:12px; color:var(--ink-3); padding:8px 0 4px}
+footer b{color:var(--accent)}

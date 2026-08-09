@@ -1,0 +1,28 @@
+/* ═══════════════════════════════════════════════════════════════
+   TOKENS — shared contract
+   ───────────────────────────────────────────────────────────────
+   Skins live in assets/css/skins/*.css. Each one redefines the SAME
+   token names, so no component ever knows which skin is active.
+
+   Adding a skin — see CONTRIBUTING.md:
+     1. assets/css/skins/<id>.css   define every token below
+     2. index.html                  link the stylesheet
+     3. assets/js/config.js         add it to the SKINS registry
+
+   The contract every skin must define:
+     surfaces  --sand --card --sand-2 --line
+     text      --ink --ink-2 --ink-3
+     action    --accent --accent-w --btn --btn-d --btn-fg
+     semantic  --pos --pos-w --neg --neg-w
+     brand     --logo-a --logo-b --logo-c
+     shape     --r-s --r-m --r-l --r-pill --border
+     type      --font --font-display --display-weight --display-spacing
+     depth     --shadow --shadow-lg
+
+   Color mode resolves in three states: no attribute (follow the OS),
+   data-theme="light", data-theme="dark". Every skin must handle all three.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* --gold is optional ornament. Skins that do not define it fall back to
+   their accent, so any ornament rule stays valid everywhere. */
+:root{ --gold:var(--accent); --gold-w:var(--accent-w); }

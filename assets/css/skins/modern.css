@@ -1,0 +1,75 @@
+/* ═══════════════════════════════════════════════════════════════
+   SKIN · modern — white / black / blue / red
+   ───────────────────────────────────────────────────────────────
+   Also the fallback: the bare :root selector means these tokens
+   apply before JS has stamped a data-skin attribute.
+   ═══════════════════════════════════════════════════════════════ */
+/* ───────────── MODERN · light ─────────────
+   text contrast measured on the card behind it:
+   ink 17.4:1 · ink-2 7.6:1 · ink-3 4.6:1 · accent 6.5:1 · neg 5.7:1 */
+:root{
+  --sand:#F5F7FA;        /* 0 · page  */
+  --card:#FFFFFF;        /* 1 · card — lifts by getting lighter */
+  --sand-2:#EDF1F6;      /* 2 · input — recesses by getting darker */
+  --line:#DDE3EC;
+
+  --ink:#0D1117;         /* near-black, never pure #000 */
+  --ink-2:#4A5568;
+  --ink-3:#7A8698;
+
+  --accent:#1257C7;      /* blue as TEXT */
+  --accent-w:#E7EFFC;    /* wash */
+  --btn:#1B62D6;         /* blue as FILL — white on it = 5.6:1 */
+  --btn-d:#0F4CAF;
+  --btn-fg:#FFFFFF;
+
+  --pos:#1257C7;         /* owed to them */
+  --pos-w:#E7EFFC;
+  --neg:#C62828;         /* they owe */
+  --neg-w:#FBEAEA;
+
+  --logo-a:#4A8DF0; --logo-b:#1B62D6; --logo-c:#0E4C9A;
+
+  /* shape + type are part of the skin, not just color */
+  --r-s:10px; --r-m:14px; --r-l:20px; --r-pill:999px;
+  --border:1px;
+  --font:'IBM Plex Sans Arabic','Tajawal','Segoe UI',system-ui,-apple-system,sans-serif;
+  --font-display:var(--font);
+  --display-weight:700;
+  --display-spacing:-.01em;
+
+  --shadow:0 1px 2px rgba(13,17,23,.05), 0 8px 24px -12px rgba(13,17,23,.22);
+  --shadow-lg:0 2px 4px rgba(13,17,23,.06), 0 24px 48px -20px rgba(13,17,23,.32);
+}
+
+/* ───────────── MODERN · dark ─────────────
+   The surface ladder INVERTS: each level up gets LIGHTER, not shadowed,
+   because shadow barely reads on a dark ground. Base sits at ~8% lightness
+   — never #000, which haloes around thin Arabic letterforms. Body text
+   targets ~6:1 rather than WCAG's 4.5:1 floor: light-on-dark reads
+   measurably worse for sustained reading.
+   ink 15.9:1 · ink-2 9.2:1 · ink-3 5.5:1 · accent 7.0:1 · neg 6.3:1 */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --sand:#0D1117; --card:#161B22; --sand-2:#1E242D; --line:#2D3542;
+    --ink:#F0F3F7; --ink-2:#B4BECC; --ink-3:#8592A3;
+    --accent:#6BA6FF; --accent-w:#14263F;
+    --btn:#2F6FE4; --btn-d:#4785EE; --btn-fg:#FFFFFF;
+    --pos:#6BA6FF; --pos-w:#14263F;
+    --neg:#FF6B6B; --neg-w:#331A1A;
+    --logo-a:#6BA6FF; --logo-b:#2F6FE4; --logo-c:#1B62D6;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+    --shadow-lg:0 2px 4px rgba(0,0,0,.45), 0 24px 48px -20px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --sand:#0D1117; --card:#161B22; --sand-2:#1E242D; --line:#2D3542;
+  --ink:#F0F3F7; --ink-2:#B4BECC; --ink-3:#8592A3;
+  --accent:#6BA6FF; --accent-w:#14263F;
+  --btn:#2F6FE4; --btn-d:#4785EE; --btn-fg:#FFFFFF;
+  --pos:#6BA6FF; --pos-w:#14263F;
+  --neg:#FF6B6B; --neg-w:#331A1A;
+  --logo-a:#6BA6FF; --logo-b:#2F6FE4; --logo-c:#1B62D6;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.7);
+  --shadow-lg:0 2px 4px rgba(0,0,0,.45), 0 24px 48px -20px rgba(0,0,0,.8);
+}

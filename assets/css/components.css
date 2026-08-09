@@ -1,0 +1,180 @@
+/* ═══════════ COMPONENTS — skin-agnostic: every value is a token ═══════════ */
+
+/* ── header ── */
+header{display:flex; align-items:center; gap:10px; padding:22px 4px 18px}
+.mark{width:40px; height:40px; border-radius:var(--r-m); flex:none;
+  background:linear-gradient(150deg,var(--logo-a),var(--logo-b) 55%,var(--logo-c));
+  display:grid; place-items:center; box-shadow:0 4px 14px -4px color-mix(in srgb, var(--logo-b) 55%, transparent)}
+.mark svg{width:24px; height:24px; display:block}
+.brand h1{font-family:var(--font-display); font-size:20px; font-weight:var(--display-weight);
+  margin:0; letter-spacing:var(--display-spacing); line-height:1.25}
+.brand p{margin:1px 0 0; font-size:12.5px; color:var(--ink-3); font-weight:500}
+header .spacer{flex:1}
+
+.ghost{padding:8px 11px; border-radius:var(--r-s); font-size:13px; font-weight:600;
+  color:var(--ink-2); background:var(--card); border:var(--border) solid var(--line);
+  transition:.18s; display:inline-flex; align-items:center; gap:6px; white-space:nowrap}
+.ghost:hover{color:var(--accent); border-color:var(--accent)}
+a.ghost{text-decoration:none}
+.ghost .ico{font-size:14px; line-height:1}
+.star .ico{color:var(--gold); font-size:15px}
+.star:hover{background:var(--accent-w)}
+
+/* four controls + a tagline do not fit a phone header; labels drop first */
+@media (max-width:540px){
+  .ghost .lbl{display:none}
+  .ghost{padding:8px 10px}
+  /* #langBtn has no icon — its label is the whole control */
+  #langBtn .lbl{display:inline}
+}
+@media (max-width:430px){ .brand p{display:none} }
+
+/* ── cards ── */
+.card{background:var(--card); border:var(--border) solid var(--line); border-radius:var(--r-l);
+  padding:20px; margin-bottom:14px; box-shadow:var(--shadow)}
+.card > h2{font-family:var(--font-display); margin:0 0 4px; font-size:15.5px;
+  font-weight:var(--display-weight); display:flex; align-items:center; gap:9px}
+.card > h2 .n{width:22px; height:22px; border-radius:var(--r-s); background:var(--accent-w);
+  color:var(--accent); font-size:12px; font-weight:700; display:grid; place-items:center; flex:none}
+.hint{margin:0 0 14px; font-size:13px; color:var(--ink-3)}
+
+/* ── group title row ── */
+.title-row{display:flex; align-items:center; gap:10px; margin-bottom:12px}
+#groupName{flex:1 1 auto; min-width:0; font-family:var(--font-display); font-size:19px;
+  font-weight:var(--display-weight); background:none; border:none;
+  border-bottom:2px dashed var(--line); padding:6px 2px; transition:.2s}
+#groupName:focus{outline:none; border-bottom-color:var(--accent); border-bottom-style:solid}
+#groupName::placeholder{color:var(--ink-3); font-weight:600}
+/* beats the generic `input,select{width:100%}` — otherwise the select eats
+   the row and #groupName collapses to zero width */
+#currency{width:auto; flex:0 0 auto; background-color:var(--sand-2);
+  border:var(--border) solid var(--line); border-radius:var(--r-s);
+  padding:9px 30px 9px 12px; font-weight:600; font-size:14px}
+
+.tools{display:flex; align-items:center; gap:12px; margin:0 0 16px}
+.tools .sep{width:1px; height:13px; background:var(--line)}
+
+/* ── inputs ── */
+.row{display:flex; gap:9px; flex-wrap:wrap}
+.row > *{min-width:0}
+.grow{flex:1 1 140px}
+input[type=text],input[type=number],select{
+  width:100%; background:var(--sand-2); border:1.5px solid transparent;
+  border-radius:var(--r-m); padding:12px 14px; transition:.18s; appearance:none}
+input:focus,select:focus{outline:none; border-color:var(--accent); background:var(--card)}
+input::placeholder{color:var(--ink-3)}
+/* one chevron, mirrored by direction — CSS-triangle arrows pinned to a
+   physical side rendered as specks and never flipped for LTR */
+select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%237A8698' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:left 14px center;
+  background-size:10px 7px; padding-inline-end:34px}
+[dir="ltr"] select{background-position:right 14px center}
+
+.btn{background:var(--btn); color:var(--btn-fg); font-weight:700; padding:12px 18px;
+  border-radius:var(--r-m); transition:.18s; white-space:nowrap; flex:none}
+.btn:hover{background:var(--btn-d); transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn[aria-busy="true"]{opacity:.6; pointer-events:none}
+.btn-wide{width:100%; padding:15px; font-size:16px; margin-top:4px}
+.btn-soft{background:var(--accent-w); color:var(--accent)}
+.btn-soft:hover{background:var(--accent-w); filter:brightness(.95)}
+.link-btn{font-size:12.5px; font-weight:600; color:var(--accent); padding:4px}
+
+/* ── people chips ── */
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px}
+.chip{display:inline-flex; align-items:center; gap:7px; background:var(--sand-2);
+  border:var(--border) solid var(--line); border-radius:var(--r-pill);
+  padding:6px 8px 6px 12px; font-size:14px; font-weight:600}
+.chip .av{width:22px; height:22px; border-radius:50%; display:grid; place-items:center;
+  font-size:11px; font-weight:700; color:#fff; flex:none}
+.chip .x{width:22px; height:22px; border-radius:50%; color:var(--ink-3); font-size:15px;
+  display:grid; place-items:center; line-height:1; transition:.15s}
+.chip .x:hover{background:var(--neg-w); color:var(--neg)}
+
+.toggle{display:inline-flex; align-items:center; gap:7px; border-radius:var(--r-pill);
+  padding:7px 14px; font-size:14px; font-weight:600; border:1.5px solid var(--line);
+  background:var(--card); color:var(--ink-3); transition:.16s; user-select:none}
+.toggle[aria-pressed="true"]{background:var(--accent-w); border-color:var(--accent); color:var(--accent)}
+.toggle:hover{border-color:var(--accent)}
+
+.split-head{display:flex; align-items:center; justify-content:space-between; margin:16px 0 0}
+.split-head span{font-size:13px; font-weight:600; color:var(--ink-2)}
+
+/* ── expense rows ── */
+.exp{display:flex; align-items:center; gap:12px; padding:14px 4px;
+  border-bottom:1px solid var(--line)}
+.exp:last-child{border-bottom:none}
+.exp .av{width:34px; height:34px; border-radius:var(--r-m); display:grid; place-items:center;
+  color:#fff; font-weight:700; font-size:13px; flex:none}
+.exp .meta{flex:1; min-width:0}
+.exp .t{font-weight:600; font-size:14.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+/* the subtitle used to clip mid-number («300.00 لل…»); it now wraps to two
+   lines and truncates on a line boundary instead */
+.exp .s{font-size:12.5px; color:var(--ink-3); line-height:1.5; margin-top:1px;
+  display:-webkit-box; -webkit-line-clamp:2; line-clamp:2;
+  -webkit-box-orient:vertical; overflow:hidden}
+.exp .s b{font-weight:600; color:var(--ink-2)}
+.exp .amt{font-weight:700; font-size:14.5px}
+/* was near-invisible: dim grey at .7 opacity. Now a real 36px tap target */
+.exp .del{color:var(--ink-3); width:36px; height:36px; flex:none; border-radius:var(--r-s);
+  font-size:16px; line-height:1; display:grid; place-items:center; transition:.15s}
+.exp .del:hover,.exp .del:focus-visible{background:var(--neg-w); color:var(--neg)}
+
+#totalRow{padding-top:14px; margin-top:8px; border-top:1px dashed var(--line);
+  justify-content:space-between; font-weight:700; font-size:14.5px}
+
+/* ── balances ── */
+.bal{display:flex; align-items:center; gap:10px; padding:10px 0}
+.bal .av{width:30px; height:30px; border-radius:50%; display:grid; place-items:center;
+  color:#fff; font-weight:700; font-size:12px; flex:none}
+.bal .nm{flex:1; font-weight:600; font-size:14.5px}
+.bal .v{font-weight:700; font-size:14px; padding:3px 10px; border-radius:var(--r-pill)}
+.v.pos{background:var(--pos-w); color:var(--pos)}
+.v.neg{background:var(--neg-w); color:var(--neg)}
+.v.zero{background:var(--sand-2); color:var(--ink-3)}
+
+/* ── settlement ── */
+#settle{margin-top:14px}
+.pay{display:flex; align-items:center; gap:10px; background:var(--card);
+  border:var(--border) solid var(--line); border-radius:var(--r-m);
+  padding:13px 14px; margin-bottom:9px; box-shadow:var(--shadow)}
+.pay .av{width:30px; height:30px; border-radius:50%; display:grid; place-items:center;
+  color:#fff; font-weight:700; font-size:12px; flex:none}
+.pay .arrow{color:var(--ink-3); font-size:16px; flex:none}
+.pay .who{font-weight:700; font-size:14.5px}
+.pay .amt{margin-inline-start:auto; font-weight:700; color:var(--accent); font-size:15px}
+.clear{text-align:center; padding:30px 16px; background:var(--accent-w); border-radius:var(--r-l)}
+.clear .big{font-family:var(--font-display); font-size:26px; font-weight:var(--display-weight);
+  color:var(--accent); margin-bottom:4px}
+.clear .sub{font-size:14px; color:var(--ink-2)}
+
+.empty{text-align:center; padding:26px 16px; color:var(--ink-3); font-size:13.5px}
+.empty .ico{font-size:26px; opacity:.5; display:block; margin-bottom:6px}
+
+/* ── sticky action bar ── */
+.bar{position:fixed; inset-inline:0; bottom:0; z-index:20;
+  padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+  background:color-mix(in srgb, var(--sand) 88%, transparent);
+  backdrop-filter:blur(14px); border-top:var(--border) solid var(--line)}
+.bar .inner{max-width:640px; margin:0 auto; display:flex; gap:9px}
+.bar .btn{flex:1 1 0; min-width:0; padding-inline:10px}
+@media (max-width:400px){ .bar .btn{font-size:14px; padding:12px 6px} }
+
+/* ── toast ── */
+#toast{position:fixed; inset-inline:0; bottom:96px; display:flex; justify-content:center;
+  pointer-events:none; z-index:40}
+#toast div{background:var(--ink); color:var(--sand); padding:11px 18px;
+  border-radius:var(--r-pill); font-size:14px; font-weight:600; box-shadow:var(--shadow-lg);
+  opacity:0; transform:translateY(8px); transition:.25s; max-width:88vw; text-align:center}
+#toast div.show{opacity:1; transform:none}
+
+/* ── PDF progress overlay ── */
+#pdfWait{position:fixed; inset:0; z-index:9999; display:none; background:var(--sand);
+  flex-direction:column; align-items:center; justify-content:center; gap:16px}
+#pdfWait.on{display:flex}
+#pdfWait .sp{width:34px; height:34px; border-radius:50%;
+  border:3px solid var(--line); border-top-color:var(--accent); animation:spin .8s linear infinite}
+#pdfWait p{margin:0; font-size:15px; font-weight:600; color:var(--ink-2)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion: reduce){ #pdfWait .sp{animation-duration:2.4s} }
