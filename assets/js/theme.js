@@ -6,7 +6,9 @@
 import { SKINS } from "./config.js";
 import { L } from "./i18n.js";
 
-export const THEMES = ["system", "light", "dark"];
+/* light first, so it is the default for a visitor with no stored choice.
+   The cycle then reads light → dark → follow-the-OS. */
+export const THEMES = ["light", "dark", "system"];
 
 let themeIdx = 0;
 let skinIdx  = 0;   // registry order: the first entry is the default
