@@ -44,9 +44,13 @@
   --display-weight:700;
   --display-spacing:0;
 
-  /* no shadows — depth comes from the hairline alone */
-  --shadow:none;
-  --shadow-lg:0 8px 28px -14px rgba(0,0,0,.45);
+  /* Depth without colour: a soft neutral shadow, and a gradient on the black
+     fills so a large area of ink reads as a surface rather than a hole. */
+  --shadow:0 1px 2px rgba(10,10,10,.05), 0 10px 24px -16px rgba(10,10,10,.35);
+  --shadow-lg:0 4px 10px rgba(10,10,10,.10), 0 26px 50px -24px rgba(10,10,10,.5);
+  --ink-grad:linear-gradient(168deg, #333333 0%, #141414 46%, #050505 100%);
+  --ink-edge:inset 0 1px 0 rgba(255,255,255,.16);
+  --btn-shadow:0 2px 5px rgba(10,10,10,.26), 0 10px 22px -12px rgba(10,10,10,.5);
 
   /* invoice — declared outside the dark blocks: paper is always light */
   --bill-paper:#FFFFFF; --bill-fill:#F4F4F4;
@@ -65,8 +69,11 @@
     --pos:#FFFFFF; --pos-w:#1F1F1F;
     --neg:#0A0A0A; --neg-w:#F5F5F5;
     --logo-a:#FFFFFF; --logo-b:#D8D8D8; --logo-c:#9A9A9A;
-    --shadow:none;
-    --shadow-lg:0 8px 28px -14px rgba(0,0,0,.8);
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 24px -16px rgba(0,0,0,.8);
+    --shadow-lg:0 4px 12px rgba(0,0,0,.6), 0 26px 50px -24px rgba(0,0,0,.9);
+    --ink-grad:linear-gradient(168deg, #FFFFFF 0%, #EDEDED 52%, #D6D6D6 100%);
+    --ink-edge:inset 0 -1px 0 rgba(0,0,0,.14);
+    --btn-shadow:0 2px 6px rgba(0,0,0,.55), 0 12px 26px -14px rgba(0,0,0,.75);
   }
 }
 :root[data-skin="arabi"][data-theme="dark"]{
@@ -77,18 +84,40 @@
   --pos:#FFFFFF; --pos-w:#1F1F1F;
   --neg:#0A0A0A; --neg-w:#F5F5F5;
   --logo-a:#FFFFFF; --logo-b:#D8D8D8; --logo-c:#9A9A9A;
-  --shadow:none;
-  --shadow-lg:0 8px 28px -14px rgba(0,0,0,.8);
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 10px 24px -16px rgba(0,0,0,.8);
+  --shadow-lg:0 4px 12px rgba(0,0,0,.6), 0 26px 50px -24px rgba(0,0,0,.9);
+  --ink-grad:linear-gradient(168deg, #FFFFFF 0%, #EDEDED 52%, #D6D6D6 100%);
+  --ink-edge:inset 0 -1px 0 rgba(0,0,0,.14);
+  --btn-shadow:0 2px 6px rgba(0,0,0,.55), 0 12px 26px -14px rgba(0,0,0,.75);
 }
 
 /* ── the little structure tokens cannot express ─────────────────
    Kept deliberately short: the whole point of this skin is that it
    adds nothing. Every rule here removes something. */
 [data-skin="arabi"] .mark{
-  background:var(--ink);
-  box-shadow:none;
+  background:var(--ink-grad);
+  box-shadow:var(--btn-shadow), var(--ink-edge);
   border-radius:var(--r-m);
 }
+
+/* A flat black rectangle reads as a hole punched in the page. The gradient
+   plus a one-pixel top highlight gives it a light source, which is the whole
+   difference between "black box" and "black surface". */
+[data-skin="arabi"] .btn{
+  background:var(--ink-grad);
+  box-shadow:var(--btn-shadow), var(--ink-edge);
+}
+[data-skin="arabi"] .btn:hover{
+  background:var(--ink-grad);
+  filter:brightness(1.35);
+}
+[data-skin="arabi"] .btn:active{ box-shadow:var(--ink-edge) }
+/* the soft button keeps the flat wash — it is secondary by design */
+[data-skin="arabi"] .btn-soft{
+  background:var(--accent-w);
+  box-shadow:none;
+}
+[data-skin="arabi"] .btn-soft:hover{ filter:brightness(.96) }
 [data-skin="arabi"] .card > h2{
   padding-bottom:10px;
   margin-bottom:12px;
@@ -105,11 +134,19 @@
 /* the WhatsApp green is a brand cue everywhere else; in a skin whose whole
    premise is two colours it would be the only hue on the page, so this skin
    opts out and keeps the glyph to carry the recognition */
-[data-skin="arabi"] .btn.wa{ background:var(--btn); color:var(--btn-fg) }
-[data-skin="arabi"] .btn.wa:hover{ background:var(--btn-d); filter:none }
+[data-skin="arabi"] .btn.wa{ background:var(--ink-grad); color:var(--btn-fg) }
+[data-skin="arabi"] .btn.wa:hover{ filter:brightness(1.35) }
 
 [data-skin="arabi"] .toggle[aria-pressed="true"]{
-  background:var(--ink);
-  border-color:var(--ink);
+  background:var(--ink-grad);
+  border-color:transparent;
   color:var(--card);
+  box-shadow:0 1px 3px rgba(10,10,10,.3), var(--ink-edge);
 }
+/* the balance pill for «عليه» is a filled ink chip — same treatment */
+[data-skin="arabi"] .v.neg{ background:var(--ink-grad); box-shadow:var(--ink-edge) }
+/* avatars are small ink discs; the gradient keeps them from going matte */
+[data-skin="arabi"] .exp .av,
+[data-skin="arabi"] .bal .av,
+[data-skin="arabi"] .chip .av,
+[data-skin="arabi"] .pay .av{ box-shadow:var(--ink-edge) }
