@@ -1,0 +1,115 @@
+/* ═══════════════════════════════════════════════════════════════
+   SKIN · arabi (عربي) — black on white, and nothing else
+   ───────────────────────────────────────────────────────────────
+   The restrained sibling of أصيل: same Arabic-first typography, none
+   of the ornament. Kufi for headings, a clean sans for text, hairline
+   rules, square-ish corners, no shadows, no colour at all.
+
+   The one interesting problem a monochrome skin has: «له» and «عليه»
+   cannot be told apart by hue. They are separated by INVERSION instead
+   — money owed to you is dark on light, money you owe is light on dark.
+   That needs no new token and no component change: --neg simply becomes
+   the light value and --neg-w the dark one.
+
+   Contrast on the surface each token sits on:
+   ink 19.6:1 · ink-2 8.9:1 · ink-3 4.6:1 · accent 19.6:1
+   ═══════════════════════════════════════════════════════════════ */
+:root[data-skin="arabi"]{
+  --sand:#F6F6F6;        /* 0 · page  */
+  --card:#FFFFFF;        /* 1 · card — the only pure white */
+  --sand-2:#EDEDED;      /* 2 · input */
+  --line:#E0E0E0;
+
+  --ink:#0A0A0A;         /* near-black, never pure #000 */
+  --ink-2:#4A4A4A;
+  --ink-3:#767676;
+
+  --accent:#0A0A0A;
+  --accent-w:#F0F0F0;
+  --btn:#0A0A0A;
+  --btn-d:#2B2B2B;
+  --btn-fg:#FFFFFF;
+
+  --pos:#0A0A0A;         /* له — dark on light */
+  --pos-w:#EDEDED;
+  --neg:#FFFFFF;         /* عليه — inverted, so it reads without colour */
+  --neg-w:#0A0A0A;
+
+  --logo-a:#3A3A3A; --logo-b:#0A0A0A; --logo-c:#000000;
+
+  --r-s:4px; --r-m:6px; --r-l:8px; --r-pill:999px;
+  --border:1px;
+  --font:'IBM Plex Sans Arabic','Tajawal',system-ui,sans-serif;
+  --font-display:'Noto Kufi Arabic','IBM Plex Sans Arabic',sans-serif;
+  --display-weight:700;
+  --display-spacing:0;
+
+  /* no shadows — depth comes from the hairline alone */
+  --shadow:none;
+  --shadow-lg:0 8px 28px -14px rgba(0,0,0,.45);
+
+  /* invoice — declared outside the dark blocks: paper is always light */
+  --bill-paper:#FFFFFF; --bill-fill:#F4F4F4;
+  --bill-rule:#DCDCDC;  --bill-rule-soft:#EFEFEF;
+  --bill-ink:#0A0A0A;   --bill-ink-2:#4A4A4A; --bill-ink-3:#767676;
+  --bill-accent:#0A0A0A;
+}
+
+/* ── dark: the same page, inverted. ink 17.4:1 · ink-2 9.3:1 · ink-3 5.1:1 ── */
+@media (prefers-color-scheme: dark){
+  :root[data-skin="arabi"]:not([data-theme="light"]){
+    --sand:#0A0A0A; --card:#161616; --sand-2:#1F1F1F; --line:#2E2E2E;
+    --ink:#F5F5F5; --ink-2:#BFBFBF; --ink-3:#8F8F8F;
+    --accent:#FFFFFF; --accent-w:#1F1F1F;
+    --btn:#FFFFFF; --btn-d:#E2E2E2; --btn-fg:#0A0A0A;
+    --pos:#FFFFFF; --pos-w:#1F1F1F;
+    --neg:#0A0A0A; --neg-w:#F5F5F5;
+    --logo-a:#FFFFFF; --logo-b:#D8D8D8; --logo-c:#9A9A9A;
+    --shadow:none;
+    --shadow-lg:0 8px 28px -14px rgba(0,0,0,.8);
+  }
+}
+:root[data-skin="arabi"][data-theme="dark"]{
+  --sand:#0A0A0A; --card:#161616; --sand-2:#1F1F1F; --line:#2E2E2E;
+  --ink:#F5F5F5; --ink-2:#BFBFBF; --ink-3:#8F8F8F;
+  --accent:#FFFFFF; --accent-w:#1F1F1F;
+  --btn:#FFFFFF; --btn-d:#E2E2E2; --btn-fg:#0A0A0A;
+  --pos:#FFFFFF; --pos-w:#1F1F1F;
+  --neg:#0A0A0A; --neg-w:#F5F5F5;
+  --logo-a:#FFFFFF; --logo-b:#D8D8D8; --logo-c:#9A9A9A;
+  --shadow:none;
+  --shadow-lg:0 8px 28px -14px rgba(0,0,0,.8);
+}
+
+/* ── the little structure tokens cannot express ─────────────────
+   Kept deliberately short: the whole point of this skin is that it
+   adds nothing. Every rule here removes something. */
+[data-skin="arabi"] .mark{
+  background:var(--ink);
+  box-shadow:none;
+  border-radius:var(--r-m);
+}
+[data-skin="arabi"] .card > h2{
+  padding-bottom:10px;
+  margin-bottom:12px;
+  border-bottom:1px solid var(--ink);   /* one hard rule, like a printed heading */
+}
+[data-skin="arabi"] .card > h2 .n{
+  background:transparent;
+  border:1px solid var(--line);
+  border-radius:50%;
+}
+[data-skin="arabi"] .tools .sep{ height:11px }
+[data-skin="arabi"] .clear{ border:1px solid var(--ink) }
+[data-skin="arabi"] .pay{ border-inline-start:2px solid var(--ink) }
+/* the WhatsApp green is a brand cue everywhere else; in a skin whose whole
+   premise is two colours it would be the only hue on the page, so this skin
+   opts out and keeps the glyph to carry the recognition */
+[data-skin="arabi"] .btn.wa{ background:var(--btn); color:var(--btn-fg) }
+[data-skin="arabi"] .btn.wa:hover{ background:var(--btn-d); filter:none }
+
+[data-skin="arabi"] .toggle[aria-pressed="true"]{
+  background:var(--ink);
+  border-color:var(--ink);
+  color:var(--card);
+}

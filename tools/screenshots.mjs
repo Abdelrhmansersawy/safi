@@ -122,6 +122,8 @@ const ITEMS = [
 const SHOTS = [
   { name:"asil-light",      lang:"ar", skin:"asil",   theme:"light" },
   { name:"asil-dark",       lang:"ar", skin:"asil",   theme:"dark"  },
+  { name:"arabi-light",     lang:"ar", skin:"arabi",  theme:"light" },
+  { name:"arabi-dark",      lang:"ar", skin:"arabi",  theme:"dark"  },
   { name:"modern-light",    lang:"ar", skin:"modern", theme:"light" },
   { name:"modern-dark-en",  lang:"en", skin:"modern", theme:"dark"  }
 ];

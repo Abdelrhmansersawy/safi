@@ -23,12 +23,23 @@ Arabic-first (`دعم كامل للغة العربية`), with English available
 
 ## Themes
 
-Two complete visual systems, each with light and dark modes.
+Three complete visual systems, each with light, dark and follow-the-OS modes.
+Adding a fourth is one CSS file and one registry entry — no component changes.
 
 | عربي أصيل — default | عربي أصيل · dark |
 |:---:|:---:|
 | <img src="docs/media/asil-light.webp" width="300"> | <img src="docs/media/asil-dark.webp" width="300"> |
 | Naskh type, parchment ground, eight-point star tessellation, illuminated headings, Arabic-Indic numerals | Lamplight on leather — not an inverted page |
+
+| عربي | عربي · dark |
+|:---:|:---:|
+| <img src="docs/media/arabi-light.webp" width="300"> | <img src="docs/media/arabi-dark.webp" width="300"> |
+| Black on white and nothing else. Kufi headings, hairline rules, no shadows | The same page, inverted |
+
+> **A monochrome skin has one real problem:** «له» and «عليه» cannot differ by hue.
+> They are separated by **inversion** — owed to you is dark on light, owed by you is
+> light on dark. That needed no new token and no component change: `--neg` simply
+> becomes the light value and `--neg-w` the dark one.
 
 | Modern | Modern · dark · English |
 |:---:|:---:|
@@ -93,7 +104,7 @@ element bounds, so a table row is never sheared in half.
 - **Send to the group** — the settlement as a ready-to-send WhatsApp message.
 - **PDF invoice** — one-click download, correct Arabic, page breaks that never cut a row.
 - **Bilingual** — Arabic (default) and English, with full RTL/LTR mirroring.
-- **Two skins × three color modes** — light, dark, or follow the OS.
+- **Three skins × three color modes** — light, dark, or follow the OS.
 - **Offline-tolerant** — the app itself has zero runtime dependencies; only PDF export
   fetches a library, and it falls back to the print dialog when offline.
 
@@ -143,6 +154,7 @@ assets/css/
     modern.css          tokens for the modern skin
     asil.css            tokens for عربي أصيل
     asil-ornament.css   the ornament that makes it a manuscript page
+    arabi.css           tokens for عربي — monochrome
 assets/js/
   config.js             skin registry, repo URL, CDN endpoints
   share.js              settlement → WhatsApp / clipboard message
