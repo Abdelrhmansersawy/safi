@@ -120,10 +120,10 @@ const ITEMS = [
 ];
 
 const SHOTS = [
-  { name:"asil-light",      lang:"ar", skin:"asil",   theme:"light" },
-  { name:"asil-dark",       lang:"ar", skin:"asil",   theme:"dark"  },
   { name:"arabi-light",     lang:"ar", skin:"arabi",  theme:"light" },
   { name:"arabi-dark",      lang:"ar", skin:"arabi",  theme:"dark"  },
+  { name:"asil-light",      lang:"ar", skin:"asil",   theme:"light" },
+  { name:"asil-dark",       lang:"ar", skin:"asil",   theme:"dark"  },
   { name:"modern-light",    lang:"ar", skin:"modern", theme:"light" },
   { name:"modern-dark-en",  lang:"en", skin:"modern", theme:"dark"  }
 ];
@@ -156,11 +156,11 @@ try{
        stepped frames. Panning a still is what makes it read as scrolling an
        app instead of a slideshow, and it costs one render.
        No device shell: it dates the asset and competes with the brand. The
-       padding is the app's own parchment plus a gold hairline — the frame is
-       صافي, not a phone. */
+       padding is the app's own white plus one hairline — the frame is صافي,
+       not a phone. */
     console.log("  rendering the walkthrough…");
     const full = await fixture("walk", {
-      lang:"ar", skin:"asil", theme:"light",
+      lang:"ar", skin:"arabi", theme:"light",
       inject: frameInject(PEOPLE, ITEMS, { settle:true })
     });
     tmp.push(full.file);
@@ -170,7 +170,7 @@ try{
     const pal = "/tmp/safi_palette.png";
     /* hold at the top, glide down, hold at the settlement */
     const pan = `crop=${W}:${H}:0:'min(max(0\,(t-0.9)*300)\,ih-${H})'`;
-    const brand = "pad=iw+28:ih+28:14:14:0xF6EFE0,pad=iw+4:ih+4:2:2:0xA67C1A";
+    const brand = "pad=iw+28:ih+28:14:14:0xFFFFFF,pad=iw+2:ih+2:1:1:0xE6E6E6";
 
     spawnSync("ffmpeg", ["-y","-loglevel","error","-loop","1","-t",String(SECS),
       "-i","/tmp/safi_walk.png","-vf",
@@ -189,7 +189,7 @@ try{
      page so the image is about one thing. */
   console.log("  rendering feature shots…");
 
-  const waShot = await fixture("wa", { lang:"ar", skin:"asil", theme:"light", inject: `
+  const waShot = await fixture("wa", { lang:"ar", skin:"arabi", theme:"light", inject: `
     <script type="module">
     window.addEventListener("load", () => setTimeout(() => {
       document.querySelector('[data-action="demo"]').click();
@@ -205,7 +205,7 @@ try{
   tmp.push(waShot.file);
   await shoot(waShot.url, join(OUT, "whatsapp.png"), 393, 720);
 
-  const pdfShot = await fixture("pdf", { lang:"ar", skin:"asil", theme:"light", inject: `
+  const pdfShot = await fixture("pdf", { lang:"ar", skin:"arabi", theme:"light", inject: `
     <script type="module">
     import { replaceState, setSelected } from "./assets/js/state.js";
     import { buildBill } from "./assets/js/bill.js";

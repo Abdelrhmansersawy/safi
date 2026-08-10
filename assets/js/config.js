@@ -23,23 +23,23 @@ export const GITHUB = "https://github.com/Abdelrhmansersawy/safi";
    ───────────────────────────────────────────────────────────── */
 export const SKINS = [
   {
-    id: "asil",
-    font: null,   // Amiri + Aref Ruqaa ship in index.html — this is the default
-    avatars: ["#0E6F67","#1F4E79","#6B2D5B","#5A6B1E",
-              "#8A5A2B","#2F4F4F","#3E5C76","#7A5C1E"]
-  },
-  {
     id: "arabi",
-    font: "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700"
-        + "&family=Noto+Kufi+Arabic:wght@400;700&display=swap",
-    /* a monochrome skin needs a monochrome ramp — separated by lightness,
-       which is the only channel it has. All pass 4.5:1 against white. */
+    font: null,   // IBM Plex Sans Arabic + Noto Kufi ship in index.html
+    /* a monochrome skin needs a monochrome ramp — lightness is the only
+       channel it has. All pass 4.5:1 against white. */
     avatars: ["#0F0F0F","#3D3D3D","#5A5A5A","#262626",
               "#4B4B4B","#333333","#6B6B6B","#1C1C1C"]
   },
   {
+    id: "asil",
+    font: "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700"
+        + "&family=Aref+Ruqaa:wght@400;700&display=swap",
+    avatars: ["#0E6F67","#1F4E79","#6B2D5B","#5A6B1E",
+              "#8A5A2B","#2F4F4F","#3E5C76","#7A5C1E"]
+  },
+  {
     id: "modern",
-    font: "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap",
+    font: null,   // shares IBM Plex Sans Arabic with the default skin
     avatars: ["#1B62D6","#0E4C9A","#4785EE","#17395E",
               "#5573A8","#2A4A73","#7A8DA8","#3E4C63"]
   }

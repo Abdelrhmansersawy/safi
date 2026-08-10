@@ -26,25 +26,25 @@ Arabic-first (`دعم كامل للغة العربية`), with English available
 Three complete visual systems, each with light, dark and follow-the-OS modes.
 Adding a fourth is one CSS file and one registry entry — no component changes.
 
-| عربي أصيل — default | عربي أصيل · dark |
+| عربي — default | عربي · dark |
+|:---:|:---:|
+| <img src="docs/media/arabi-light.webp" width="300"> | <img src="docs/media/arabi-dark.webp" width="300"> |
+| Black and white, and nothing else. Kufi headings, one hairline, flat fills, no shadows | The same page, inverted |
+
+| عربي أصيل | عربي أصيل · dark |
 |:---:|:---:|
 | <img src="docs/media/asil-light.webp" width="300"> | <img src="docs/media/asil-dark.webp" width="300"> |
 | Naskh type, parchment ground, eight-point star tessellation, illuminated headings, Arabic-Indic numerals | Lamplight on leather — not an inverted page |
-
-| عربي | عربي · dark |
-|:---:|:---:|
-| <img src="docs/media/arabi-light.webp" width="300"> | <img src="docs/media/arabi-dark.webp" width="300"> |
-| Black on white and nothing else. Kufi headings, hairline rules, no shadows | The same page, inverted |
-
-> **A monochrome skin has one real problem:** «له» and «عليه» cannot differ by hue.
-> They are separated by **inversion** — owed to you is dark on light, owed by you is
-> light on dark. That needed no new token and no component change: `--neg` simply
-> becomes the light value and `--neg-w` the dark one.
 
 | Modern | Modern · dark · English |
 |:---:|:---:|
 | <img src="docs/media/modern-light.webp" width="300"> | <img src="docs/media/modern-dark-en.webp" width="300"> |
 | Four colors only: white, black, blue, red | Full LTR mirroring |
+
+> **A monochrome skin has one real problem:** «له» and «عليه» cannot differ by hue.
+> They are separated by **inversion** instead — owed to you is dark on light, owed by
+> you is light on dark. That needed no new token and no component change: `--neg`
+> simply becomes the light value and `--neg-w` the dark one.
 
 ## Two features worth calling out
 
@@ -62,13 +62,15 @@ for money. One tap turns the settlement into a message, so the app does the aski
 ```
 🧾 صافي — رحلة الساحل الشمالي
 
-إجمالي المصاريف: ٥٬٣٧٠٫٠٠ ج.م
+إجمالي المصاريف: 5,370.00 ج.م
 
 التسوية المطلوبة:
-• يوسف يدفع لـ محمد: ٩٤٨٫٠٠ ج.م
-• محمود يدفع لـ محمد: ٣٩٨٫٠٠ ج.م
-• أحمد يدفع لـ محمد: ١٦٫٠٠ ج.م
-• أحمد يدفع لـ كريم: ٢١٢٫٠٠ ج.م
+• يوسف يدفع لـ محمد: 948.00 ج.م
+• محمود يدفع لـ محمد: 398.00 ج.م
+• أحمد يدفع لـ محمد: 16.00 ج.م
+• أحمد يدفع لـ كريم: 212.00 ج.م
+
+مفيش استعجال، بس عشان محدش ينسى 🙂
 
 التفاصيل كلها هنا:
 https://…/#g=eyJuYW1l…
@@ -76,6 +78,9 @@ https://…/#g=eyJuYW1l…
 
 Opens WhatsApp with the message ready to send, or copies it for any other app.
 No phone numbers, no accounts.
+
+Latin digits deliberately, even in the أصيل skin: recipients paste these figures
+into InstaPay or a bank app, and none of them read ٩٤٨.
 
 </td>
 <td width="50%" valign="top">
@@ -154,7 +159,7 @@ assets/css/
     modern.css          tokens for the modern skin
     asil.css            tokens for عربي أصيل
     asil-ornament.css   the ornament that makes it a manuscript page
-    arabi.css           tokens for عربي — monochrome
+    arabi.css           tokens for عربي — monochrome, the default
 assets/js/
   config.js             skin registry, repo URL, CDN endpoints
   share.js              settlement → WhatsApp / clipboard message
